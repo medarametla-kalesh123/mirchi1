@@ -1,0 +1,582 @@
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
+
+.farmers-container {
+    margin: 20px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =====================================================
+   PAGE TITLE
+===================================================== */
+
+.farmers-title {
+    text-align: center;
+    color: #1f3c88;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+
+/* =====================================================
+   COMMON FIELD
+===================================================== */
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.field input:focus,
+.field select:focus {
+    border-color: #234d7d;
+    box-shadow: 0 0 0 2px rgba(35, 77, 125, 0.12);
+}
+
+
+/* =====================================================
+   FARMER DETAILS
+===================================================== */
+
+.farmer-card {
+    background: #f8fafc;
+    border: 1px solid #e4e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.farmer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.address-field {
+    width: 100%;
+}
+
+
+/* =====================================================
+   ITEM TABLE
+===================================================== */
+
+.table-card {
+    background: #ffffff;
+    border: 1px solid #e4e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.table-card h3 {
+    color: #234d7d;
+    margin: 0 0 15px 0;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.farmers-table {
+    width: 100%;
+    min-width: 1200px;
+    border-collapse: collapse;
+}
+
+.farmers-table th {
+    background: #234d7d;
+    color: #ffffff;
+    padding: 10px;
+    border: 1px solid #d5d5d5;
+    font-size: 14px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.farmers-table td {
+    border: 1px solid #d5d5d5;
+    padding: 6px;
+    background: #ffffff;
+}
+
+.farmers-table input {
+    width: 100%;
+    height: 34px;
+    padding: 0 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 13px;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.farmers-table tbody tr:hover td {
+    background: #f7fbff;
+}
+
+
+/* =====================================================
+   SUMMARY + CHARGES LAYOUT
+===================================================== */
+
+.bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 25px;
+    margin-top: 20px;
+    align-items: start;
+}
+
+
+/* =====================================================
+   FINANCIAL SUMMARY
+===================================================== */
+
+.summary-card {
+    background: #f8fafc;
+    border: 1px solid #e4e7eb;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.summary-card h3 {
+    color: #234d7d;
+    margin: 0 0 18px 0;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+
+/* =====================================================
+   CHARGES CARD
+===================================================== */
+
+.charges-card {
+    background: #f8fafc;
+    border: 1px solid #e4e7eb;
+    border-radius: 10px;
+    padding: 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.charges-card h3 {
+    text-align: center;
+    color: #234d7d;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 25px 0;
+}
+
+
+/* =====================================================
+   CHARGES HEADER
+===================================================== */
+
+.charges-header {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 15px;
+    padding: 0 10px 10px 10px;
+    border-bottom: 2px solid #d9dee5;
+    color: #234d7d;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   CHARGE ROW
+===================================================== */
+
+.charge-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 15px;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.charge-row label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+
+/* =====================================================
+   RATE INPUT + UNIT
+===================================================== */
+
+.rate-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.rate-box input {
+    width: 100%;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    outline: none;
+}
+
+.rate-box input:focus {
+    border-color: #234d7d;
+    box-shadow: 0 0 0 2px rgba(35, 77, 125, 0.12);
+}
+
+.rate-box span {
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+}
+
+
+/* =====================================================
+   CALCULATED TOTAL
+===================================================== */
+
+.charge-row > input {
+    width: 100%;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background: #ffffff;
+    font-size: 14px;
+    text-align: right;
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   CASH ADVANCE / LOAN / INTEREST
+===================================================== */
+
+.amount-row {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr;
+    gap: 15px;
+    align-items: center;
+    padding: 10px;
+}
+
+.amount-row label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.amount-row input {
+    width: 100%;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   TOTAL CHARGES
+===================================================== */
+
+.total-charges-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 15px;
+    align-items: center;
+    margin-top: 15px;
+    padding: 15px 10px 0 10px;
+    border-top: 2px solid #d9dee5;
+}
+
+.total-charges-row label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #234d7d;
+}
+
+.total-charges-row input {
+    width: 100%;
+    height: 40px;
+    padding: 0 10px;
+    border: 2px solid #234d7d;
+    border-radius: 6px;
+    text-align: right;
+    font-size: 16px;
+    font-weight: 700;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+
+/* =====================================================
+   NET VALUE
+===================================================== */
+
+.net-card {
+    margin-top: 25px;
+    background: #f8fafc;
+    border: 1px solid #e4e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.net-card h3 {
+    color: #234d7d;
+    margin: 0;
+}
+
+.net-card input {
+    width: 260px;
+    height: 42px;
+    border: 2px solid #28a745;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: right;
+    padding: 0 15px;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 30px;
+}
+
+.action-buttons button {
+    min-width: 140px;
+    height: 46px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Calculate */
+
+.calculate-btn {
+    background: #0d6efd;
+}
+
+.calculate-btn:hover {
+    background: #0b5ed7;
+    transform: translateY(-2px);
+}
+
+
+/* Save */
+
+.save-btn {
+    background: #198754;
+}
+
+.save-btn:hover {
+    background: #157347;
+    transform: translateY(-2px);
+}
+
+
+/* Clear */
+
+.clear-btn {
+    background: #dc3545;
+}
+
+.clear-btn:hover {
+    background: #bb2d3b;
+    transform: translateY(-2px);
+}
+
+
+/* Print */
+
+/* ================= PRINT DROPDOWN ================= */
+
+.print-dropdown{
+    position: relative;
+    display: inline-block;
+}
+
+.print-menu{
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 180px;
+    background: #ffffff;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18);
+    z-index: 9999;
+    overflow: hidden;
+}
+
+/* Override the global button style */
+.print-menu button{
+    width:100% !important;
+    height:42px !important;
+    min-width:unset !important;
+    margin:0 !important;
+    padding:0 15px !important;
+
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+
+    background:#fff !important;
+    color:#222 !important;
+
+    border:none !important;
+    border-bottom:1px solid #eee !important;
+
+    border-radius:0 !important;
+    box-shadow:none !important;
+
+    cursor:pointer;
+    font-size:15px;
+    font-weight:500;
+}
+
+.print-menu button:last-child{
+    border-bottom:none !important;
+}
+
+.print-menu button:hover{
+    background:#f3f3f3 !important;
+}
+/* =====================================================
+   RESPONSIVE DESIGN
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .farmer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bottom-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .farmers-container {
+        margin: 10px;
+        padding: 12px;
+    }
+
+    .farmers-title {
+        font-size: 24px;
+    }
+
+    .farmer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .charges-header,
+    .charge-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .charges-header {
+        display: none;
+    }
+
+    .charge-row {
+        padding: 15px 10px;
+    }
+
+    .rate-box {
+        width: 100%;
+    }
+
+    .amount-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .net-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .net-card input {
+        width: 100%;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons button {
+        width: 100%;
+    }
+}

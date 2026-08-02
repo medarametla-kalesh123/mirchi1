@@ -1,0 +1,191 @@
+/* ================= PAGE ================= */
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #efefef;
+  font-family: "Noto Sans Telugu", Arial, sans-serif;
+}
+
+.print-page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: auto;
+  background: white;
+  padding: 18px;
+  box-sizing: border-box;
+  color: #000;
+}
+
+/* ================= HEADER ================= */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.company h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.company h3 {
+  margin: 5px 0;
+  font-size: 22px;
+}
+
+.company p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.header-info table {
+  border-collapse: collapse;
+}
+
+.header-info td {
+  padding: 4px 8px;
+  font-size: 15px;
+}
+
+.header-info td:first-child {
+  font-weight: bold;
+}
+
+/* ================= FARMER INFO ================= */
+
+.farmer-info {
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  padding: 8px 0;
+  margin-bottom: 15px;
+}
+
+.farmer-info table {
+  width: 100%;
+}
+
+.farmer-info td {
+  padding: 5px;
+  font-size: 15px;
+}
+
+/* ================= ITEM TABLE ================= */
+
+.item-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+}
+
+.item-table th {
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  padding: 6px;
+  font-size: 15px;
+  text-align: center;
+}
+
+.item-table td {
+  padding: 6px;
+  text-align: center;
+  border-bottom: 1px solid #999;
+  font-size: 14px;
+}
+
+.item-table tfoot td {
+  font-weight: bold;
+  border-top: 2px solid black;
+}
+
+/* ================= SUMMARY ================= */
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.left-summary,
+.right-summary {
+  width: 48%;
+}
+
+.left-summary table,
+.right-summary table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.left-summary td,
+.right-summary td {
+  padding: 5px;
+  font-size: 15px;
+}
+
+.left-summary tr:last-child td,
+.right-summary tr:last-child td {
+  border-top: 2px solid black;
+  font-weight: bold;
+}
+
+/* ================= TOTAL ================= */
+
+.final-total {
+  margin-top: 25px;
+  border-top: 2px solid black;
+  border-bottom: 3px double black;
+  padding: 10px 0;
+}
+
+.final-total table {
+  width: 100%;
+}
+
+.final-total td {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* ================= SIGNATURES ================= */
+
+.signatures {
+  margin-top: 60px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.signature-box {
+  width: 220px;
+  text-align: center;
+}
+
+.signature-line {
+  border-top: 1px solid black;
+  margin-bottom: 8px;
+}
+
+/* ================= PRINT ================= */
+
+@media print {
+
+  body {
+    background: white;
+  }
+
+  .print-page {
+    width: 100%;
+    margin: 0;
+    padding: 10mm;
+    box-shadow: none;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+}

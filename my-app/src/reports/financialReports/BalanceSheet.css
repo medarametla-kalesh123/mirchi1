@@ -1,0 +1,264 @@
+.balancesheet-container{
+    margin:20px;
+    padding:20px;
+    background:#ffffff;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.balancesheet-title{
+    text-align:center;
+    color:#1f3c88;
+    font-size:30px;
+    font-weight:700;
+    margin-bottom:5px;
+}
+
+.financial-year{
+    text-align:center;
+    color:#0d6efd;
+    font-size:17px;
+    font-weight:600;
+    margin-bottom:25px;
+}
+
+/* ================= Main Card ================= */
+
+.balancesheet-card{
+    background:#ffffff;
+    border:1px solid #e4e7eb;
+    border-radius:8px;
+    padding:20px;
+    margin-bottom:25px;
+}
+
+/* ================= Table ================= */
+
+.table-wrapper{
+    overflow:auto;
+    max-height:650px;
+}
+
+.balancesheet-table{
+    width:100%;
+    min-width:900px;
+    border-collapse:collapse;
+}
+
+.balancesheet-table th{
+    background:#234d7d;
+    color:#ffffff;
+    border:1px solid #d5d5d5;
+    padding:12px;
+    font-size:15px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:5;
+}
+
+.balancesheet-table td{
+    border:1px solid #d5d5d5;
+    padding:10px;
+    background:#ffffff;
+    font-size:14px;
+}
+
+.balancesheet-table tbody tr:nth-child(even){
+    background:#f8fbff;
+}
+
+.balancesheet-table tbody tr:hover{
+    background:#eef6ff;
+}
+
+.amount{
+    text-align:right;
+    color:#198754;
+    font-weight:600;
+}
+
+.total-row td{
+    background:#eef4fb;
+    color:#1f3c88;
+    font-weight:700;
+    font-size:15px;
+}
+
+/* ================= Bottom ================= */
+
+.bottom-section{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:30px;
+    flex-wrap:wrap;
+}
+
+/* ================= View Buttons ================= */
+
+.view-buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.view-btn{
+    min-width:150px;
+    height:46px;
+    border:none;
+    border-radius:8px;
+    background:#6c757d;
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 4px 10px rgba(0,0,0,.15);
+}
+
+.view-btn:hover{
+    background:#495057;
+    transform:translateY(-2px);
+}
+
+.view-btn.active{
+    background:#234d7d;
+}
+
+/* ================= Action Section ================= */
+
+.action-section{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.laser-print{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:14px;
+    font-weight:600;
+    color:#333;
+}
+
+.laser-print input{
+    width:16px;
+    height:16px;
+}
+
+/* ================= Buttons ================= */
+
+.action-section button{
+    min-width:150px;
+    height:46px;
+    border:none;
+    border-radius:8px;
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 4px 10px rgba(0,0,0,.15);
+}
+
+.trial-btn{
+    background:#6610f2;
+}
+
+.trial-btn:hover{
+    background:#520dc2;
+    transform:translateY(-2px);
+}
+
+.profit-btn{
+    background:#198754;
+}
+
+.profit-btn:hover{
+    background:#157347;
+    transform:translateY(-2px);
+}
+
+.print-btn{
+    background:#20c997;
+}
+
+.print-btn:hover{
+    background:#1aa179;
+    transform:translateY(-2px);
+}
+
+.close-btn{
+    background:#dc3545;
+}
+
+.close-btn:hover{
+    background:#bb2d3b;
+    transform:translateY(-2px);
+}
+
+.action-section button:active,
+.view-btn:active{
+    transform:scale(.97);
+}
+
+/* ================= Scrollbar ================= */
+
+.table-wrapper::-webkit-scrollbar{
+    width:8px;
+    height:8px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb{
+    background:#b9c2cc;
+    border-radius:10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover{
+    background:#8d98a5;
+}
+
+/* ================= Responsive ================= */
+
+@media(max-width:1100px){
+
+    .bottom-section{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .view-buttons,
+    .action-section{
+        width:100%;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .balancesheet-title{
+        font-size:24px;
+    }
+
+    .financial-year{
+        font-size:15px;
+    }
+
+    .view-buttons{
+        flex-direction:column;
+    }
+
+    .action-section{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .view-btn,
+    .action-section button{
+        width:100%;
+    }
+
+}

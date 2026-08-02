@@ -1,0 +1,320 @@
+.kata1-container{
+    margin:20px;
+    padding:20px;
+    background:#ffffff;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+}
+
+.kata1-title{
+    text-align:center;
+    color:#1f3c88;
+    font-size:30px;
+    margin-bottom:25px;
+    font-weight:700;
+}
+
+.kata1-header{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.header-field{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.header-field label{
+    font-size:16px;
+    font-weight:600;
+    color:#333;
+}
+
+.header-field input{
+    width:180px;
+    height:36px;
+    padding:0 10px;
+    border:1px solid #cfd8dc;
+    border-radius:5px;
+    font-size:14px;
+}
+
+.table-container{
+    overflow-x:auto;
+}
+
+.kata1-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1450px;
+}
+
+.kata1-table th{
+    background:#234d7d;
+    color:#fff;
+    border:1px solid #d6d6d6;
+    padding:10px 6px;
+    font-size:14px;
+    font-weight:600;
+    text-align:center;
+}
+
+.kata1-table td{
+    border:1px solid #d6d6d6;
+    padding:6px;
+    text-align:center;
+    background:#fff;
+}
+
+.kata1-table tbody tr:hover{
+    background:#f8fbff;
+}
+
+.kata1-table input,
+.kata1-table select{
+    width:100%;
+    height:34px;
+    border:1px solid #cfd8dc;
+    border-radius:4px;
+    padding:0 8px;
+    font-size:14px;
+    background:#fff;
+    outline:none;
+    box-sizing:border-box;
+}
+
+.kata1-table input:focus,
+.kata1-table select:focus{
+    border-color:#234d7d;
+}
+
+.ok-btn{
+    width:60px;
+    height:34px;
+    border:none;
+    background:#28a745;
+    color:#fff;
+    font-weight:600;
+    border-radius:4px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.ok-btn:hover{
+    background:#218838;
+}
+
+.kata-bottom{
+    display:flex;
+    align-items:center;
+    gap:40px;
+    margin-top:25px;
+    flex-wrap:wrap;
+}
+
+.bottom-field{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.bottom-field label{
+    width:auto;
+    font-size:15px;
+    font-weight:600;
+    color:#333;
+    white-space:nowrap;
+}
+
+.bottom-field select,
+.bottom-field input{
+    width:220px;
+    height:36px;
+    border:1px solid #cfd8dc;
+    border-radius:5px;
+    padding:0 10px;
+    font-size:14px;
+    outline:none;
+    box-sizing:border-box;
+}
+
+.bottom-field select:focus,
+.bottom-field input:focus{
+    border-color:#234d7d;
+}
+/* ================= RECENT ENTRIES ================= */
+
+.recent-section{
+
+    width:100%;
+
+    margin-top:30px;
+
+    border:2px solid #1f4e79;
+
+    border-radius:6px;
+
+    background:#ffffff;
+
+    box-shadow:0 3px 8px rgba(0,0,0,.15);
+
+}
+
+.recent-title{
+
+    background:#1f4e79;
+
+    color:#fff;
+
+    text-align:center;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    padding:12px;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+}
+
+/* Scrollable Area */
+
+.recent-table-container{
+
+    height:240px;          /* About 5-6 rows visible */
+
+    overflow-y:auto;
+
+    overflow-x:auto;
+
+}
+
+/* Scroll Bar */
+
+.recent-table-container::-webkit-scrollbar{
+
+    width:10px;
+
+    height:10px;
+
+}
+
+.recent-table-container::-webkit-scrollbar-track{
+
+    background:#ececec;
+
+}
+
+.recent-table-container::-webkit-scrollbar-thumb{
+
+    background:#1f4e79;
+
+    border-radius:10px;
+
+}
+
+/* Table */
+
+.recent-table{
+
+    width:100%;
+
+    min-width:1600px;
+
+    border-collapse:collapse;
+
+}
+
+/* Sticky Header */
+
+.recent-table thead th{
+
+    position:sticky;
+
+    top:0;
+
+    background:#2f75b5;
+
+    color:#fff;
+
+    padding:10px;
+
+    border:1px solid #d9d9d9;
+
+    text-align:center;
+
+    white-space:nowrap;
+
+    z-index:100;
+
+    font-size:14px;
+
+}
+
+/* Body */
+
+.recent-table td{
+
+    border:1px solid #d9d9d9;
+
+    padding:8px;
+
+    text-align:center;
+
+    white-space:nowrap;
+
+    font-size:14px;
+
+}
+
+/* Alternate Rows */
+
+.recent-table tbody tr:nth-child(odd){
+
+    background:#ffffff;
+
+}
+
+.recent-table tbody tr:nth-child(even){
+
+    background:#f7f7f7;
+
+}
+
+/* Hover */
+
+.recent-table tbody tr:hover{
+
+    background:#fff3b0;
+
+    cursor:pointer;
+
+}
+
+/* Latest Entry */
+
+.recent-table tbody tr:first-child{
+
+    background:#d8f5d2;
+
+    font-weight:bold;
+
+}
+
+/* Empty Row */
+
+.recent-table tbody td[colspan]{
+
+    padding:20px;
+
+    font-size:16px;
+
+    color:#666;
+
+}
