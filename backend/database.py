@@ -1,22 +1,24 @@
+import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-DATABASE_URL = "mysql+pymysql://root:Kalesh%40123@localhost:3306/mirchi_trading"
+DATABASE_URL = os.getenv("MYSQL_PUBLIC_URL")
 
-engine = create_engine(
-    DATABASE_URL,
-    echo=True
-)
+# Convert mysql:// to mysql+pymysql:// for SQLAlchemy
+if DATABASE_URL.startswith("mysql://"):
+    DATABASE_URL = DATABASE_URL.replace(
+        "mysql://", "mysql+pymysql://", 1
+    )
+
+engine = create_engine(DATABASE_URL, echo=True)
 
 SessionLocal = sessionmaker(
-    autoflush=False,
     autocommit=False,
+    autoflush=False,
     bind=engine
 )
 
 Base = declarative_base()
-
 
 def get_db():
     db = SessionLocal()
