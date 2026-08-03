@@ -48,7 +48,7 @@ function FarmersPattiEntry() {
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/katalist1/farmers"
+        "https://mirchi1-2.onrender.com/katalist1/farmers"
       );
 
       const data = await response.json();
@@ -76,7 +76,7 @@ const loadFarmerDetails = async (
 
     const response = await fetch(
 
-      `http://127.0.0.1:8000/katalist1/farmer/${encodeURIComponent(
+      `https://mirchi1-2.onrender.com/katalist1/farmer/${encodeURIComponent(
         farmerName
       )}?entry_date=${entryDate}`
 
@@ -103,7 +103,7 @@ const loadAccountAddress = async (farmerName) => {
   try {
 
     const response = await fetch(
-      `http://127.0.0.1:8000/accounts/address/${encodeURIComponent(farmerName)}`
+      `https://mirchi1-2.onrender.com/accounts/address/${encodeURIComponent(farmerName)}`
     );
 
     const data = await response.json();
@@ -130,7 +130,7 @@ const loadSavedFarmers = async (selectedDate) => {
   try {
 
     const response = await fetch(
-      `http://127.0.0.1:8000/farmers-patti/farmers?patti_date=${selectedDate}`
+      `https://mirchi1-2.onrender.com/farmers-patti/farmers?patti_date=${selectedDate}`
     );
 
     const data = await response.json();
@@ -154,7 +154,7 @@ const loadDefaults = async () => {
   try {
 
     const response = await fetch(
-      "http://127.0.0.1:8000/farmers-patti/next-defaults"
+      "https://mirchi1-2.onrender.com/farmers-patti/next-defaults"
     );
 
     const data = await response.json();
@@ -355,7 +355,7 @@ const loadSavedPatti = async (farmerName, selectedDate) => {
 
     // Load Address
     const accountResponse = await fetch(
-      `http://127.0.0.1:8000/accounts/address/${encodeURIComponent(farmerName)}`
+      `https://mirchi1-2.onrender.com/accounts/address/${encodeURIComponent(farmerName)}`
     );
 
     if (accountResponse.ok) {
@@ -368,7 +368,7 @@ const loadSavedPatti = async (farmerName, selectedDate) => {
 
     // Load Saved Patti
     const response = await fetch(
-      `http://127.0.0.1:8000/farmers-patti/search?farmer_name=${encodeURIComponent(
+      `https://mirchi1-2.onrender.com/farmers-patti/search?farmer_name=${encodeURIComponent(
         farmerName
       )}&patti_date=${selectedDate}`
     );
@@ -437,7 +437,7 @@ const loadSavedPatti = async (farmerName, selectedDate) => {
 
     // Load Item Details
     const itemsResponse = await fetch(
-      `http://127.0.0.1:8000/farmers-patti/farmer/${encodeURIComponent(
+      `https://mirchi1-2.onrender.com/farmers-patti/farmer/${encodeURIComponent(
         farmerName
       )}?patti_date=${selectedDate}`
     );
@@ -752,7 +752,7 @@ const handleSave = async () => {
 
       const response = await fetch(
 
-        "http://127.0.0.1:8000/farmers-patti/",
+        "https://mirchi1-2.onrender.com/farmers-patti/",
 
         {
 
