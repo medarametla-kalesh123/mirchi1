@@ -27,7 +27,7 @@ function FarmersDueReport({ setPage }) {
 
       const response = await fetch(
 
-        "http://127.0.0.1:8000/farmers-due-report/"
+        "https://mirchi1-2.onrender.com/farmers-due-report/"
 
       );
 
