@@ -38,7 +38,7 @@ function KataList1Entry() {
   try {
 
     const response = await fetch(
-      "http://127.0.0.1:8000/katalist1/recent"
+      "https://mirchi1-2.onrender.com/katalist1/recent"
     );
 
     const data = await response.json();
@@ -115,7 +115,7 @@ const handleChange = (e) => {
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/accounts/group/Farmers"
+        "https://mirchi1-2.onrender.com/accounts/group/Farmers"
       );
 
       const data = await response.json();
@@ -137,7 +137,7 @@ const handleChange = (e) => {
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/accounts/group/Traders"
+        "https://mirchi1-2.onrender.com/accounts/group/Traders"
       );
 
       const data = await response.json();
@@ -158,7 +158,7 @@ const loadDefaults = async () => {
   try {
 
     const response = await fetch(
-      "http://127.0.0.1:8000/katalist1/next"
+      "https://mirchi1-2.onrender.com/katalist1/next"
     );
 
     const data = await response.json();
@@ -256,7 +256,7 @@ if (Number(formData.bags) <= 0) {
   try {
 
     const response = await fetch(
-      "http://127.0.0.1:8000/katalist1/",
+      "https://mirchi1-2.onrender.com/katalist1/",
       {
         method: "POST",
         headers: {
@@ -310,7 +310,7 @@ setFormData({
     try {
 
       const response = await fetch(
-        `http://127.0.0.1:8000/katalist1/${formData.entry_no}`,
+        `https://mirchi1-2.onrender.com/katalist1/${formData.entry_no}`,
         {
 
           method: "PUT",
@@ -359,7 +359,7 @@ setFormData({
     try {
 
       const response = await fetch(
-        `http://127.0.0.1:8000/katalist1/${formData.entry_no}`,
+        `https://mirchi1-2.onrender.com/katalist1/${formData.entry_no}`,
         {
 
           method: "DELETE"
