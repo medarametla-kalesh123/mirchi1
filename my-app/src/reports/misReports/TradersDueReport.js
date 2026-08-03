@@ -30,7 +30,7 @@ function TradersDueReport({ setPage }) {
 
       const response = await fetch(
 
-        "http://127.0.0.1:8000/traders-due-report/"
+        "https://mirchi1-2.onrender.com/traders-due-report/"
 
       );
 
@@ -68,7 +68,7 @@ function TradersDueReport({ setPage }) {
   };
   const loadTowns = async () => {
   const res = await fetch(
-    "http://127.0.0.1:8000/accounts/group/Traders/towns"
+    "https://mirchi1-2.onrender.com/accounts/group/Traders/towns"
   );
 
   const data = await res.json();
