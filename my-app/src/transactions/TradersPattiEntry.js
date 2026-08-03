@@ -46,7 +46,7 @@ function TradersPattiEntry() {
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/traderspatti/next-defaults"
+        "https://mirchi1-2.onrender.com/traderspatti/next-defaults"
       );
 
       const data = await response.json();
@@ -83,7 +83,7 @@ const loadSavedTraders = async (selectedDate) => {
   try {
 
     const response = await fetch(
-      `http://127.0.0.1:8000/traderspatti/saved-traders?patti_date=${selectedDate}`
+      `https://mirchi1-2.onrender.com/traderspatti/saved-traders?patti_date=${selectedDate}`
     );
 
     const data = await response.json();
@@ -110,7 +110,7 @@ const loadSavedTraders = async (selectedDate) => {
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/katalist1/traders"
+        "https://mirchi1-2.onrender.com/katalist1/traders"
       );
 
       const data = await response.json();
@@ -136,7 +136,7 @@ const loadSavedTraders = async (selectedDate) => {
 
       const response = await fetch(
 
-        `http://127.0.0.1:8000/katalist1/trader/${encodeURIComponent(
+        `https://mirchi1-2.onrender.com/katalist1/trader/${encodeURIComponent(
           traderName
         )}?entry_date=${selectedDate}`
 
@@ -207,7 +207,7 @@ const loadSavedTraders = async (selectedDate) => {
   try {
 
     const response = await fetch(
-      `http://127.0.0.1:8000/accounts/address/${encodeURIComponent(traderName)}`
+      `https://mirchi1-2.onrender.com/accounts/address/${encodeURIComponent(traderName)}`
     );
 
     const data = await response.json();
@@ -300,7 +300,7 @@ const loadSavedPatti = async (traderName, selectedDate) => {
 
     // Get Address
     const accountResponse = await fetch(
-      `http://127.0.0.1:8000/accounts/address/${encodeURIComponent(traderName)}`
+      `https://mirchi1-2.onrender.com/accounts/address/${encodeURIComponent(traderName)}`
     );
 
     if (accountResponse.ok) {
@@ -313,7 +313,7 @@ const loadSavedPatti = async (traderName, selectedDate) => {
 
     // Get Saved Patti by Trader + Date
     const response = await fetch(
-      `http://127.0.0.1:8000/traderspatti/trader/${encodeURIComponent(
+      `https://mirchi1-2.onrender.com/traderspatti/trader/${encodeURIComponent(
         traderName
       )}?patti_date=${selectedDate}`
     );
@@ -568,7 +568,7 @@ setIsSavedPatti(false);
 
       const response = await fetch(
 
-        "http://127.0.0.1:8000/traderspatti/",
+        "https://mirchi1-2.onrender.com/traderspatti/",
 
         {
 
