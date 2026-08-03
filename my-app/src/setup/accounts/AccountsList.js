@@ -45,7 +45,7 @@ function AccountsList() {
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/accounts/next-account-number"
+        "https://mirchi1-2.onrender.com/accounts/next-account-number"
       );
 
       if (response.ok) {
@@ -81,7 +81,7 @@ function AccountsList() {
   try {
 
     const response = await fetch(
-      `http://127.0.0.1:8000/accounts/group/${encodeURIComponent(group)}/names`
+      `https://mirchi1-2.onrender.com/accounts/group/${encodeURIComponent(group)}/names`
     );
 
     if (response.ok) {
@@ -214,7 +214,7 @@ function AccountsList() {
     try {
 
       const response = await fetch(
-        `http://127.0.0.1:8000/accounts/search?group_name=${encodeURIComponent(
+        `https://mirchi1-2.onrender.com/accounts/search?group_name=${encodeURIComponent(
           groupName
         )}&account_name=${encodeURIComponent(
           accountName
@@ -285,7 +285,7 @@ function AccountsList() {
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/accounts/",
+        "https://mirchi1-2.onrender.com/accounts/",
         {
 
           method: "POST",
@@ -363,7 +363,7 @@ function AccountsList() {
     try {
 
       const response = await fetch(
-        `http://127.0.0.1:8000/accounts/${formData.account_no}`,
+        `https://mirchi1-2.onrender.com/accounts/${formData.account_no}`,
         {
 
           method: "PUT",
@@ -429,7 +429,7 @@ function AccountsList() {
     try {
 
       const response = await fetch(
-        `http://127.0.0.1:8000/accounts/${formData.account_no}`,
+        `https://mirchi1-2.onrender.com/accounts/${formData.account_no}`,
         {
 
           method: "DELETE",
