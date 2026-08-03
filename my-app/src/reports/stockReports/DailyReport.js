@@ -39,7 +39,7 @@ function DailyReport() {
 
       const response = await fetch(
 
-        `http://127.0.0.1:8000/dailyreport/?report_date=${reportDate}`
+        `https://mirchi1-2.onrender.com/dailyreport/?report_date=${reportDate}`
 
       );
 
