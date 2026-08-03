@@ -84,7 +84,7 @@ const [accounts, setAccounts] = useState([]);
 
       const response = await fetch(
 
-        `http://127.0.0.1:8000/four-column-daybook/new/defaults?voucher_type=${encodeURIComponent(
+        `https://mirchi1-2.onrender.com/four-column-daybook/new/defaults?voucher_type=${encodeURIComponent(
           voucherType
         )}`
 
@@ -142,12 +142,12 @@ const [accounts, setAccounts] = useState([]);
   try {
 
     let url =
-      "http://127.0.0.1:8000/accounts";
+      "https://mirchi1-2.onrender.com/accounts";
 
     if (group !== "All Accs") {
 
       url =
-        `http://127.0.0.1:8000/accounts/group/${group}`;
+        `https://mirchi1-2.onrender.com/accounts/group/${group}`;
 
     }
 
@@ -351,7 +351,7 @@ const [accounts, setAccounts] = useState([]);
         const response =
           await fetch(
 
-            "http://127.0.0.1:8000/four-column-daybook/",
+            "https://mirchi1-2.onrender.com/four-column-daybook/",
 
             {
 
