@@ -229,6 +229,7 @@ const handleKataFarmerTypeChange = async (e) => {
   if (selectedType === "all") {
 
     setIsSavedPatti(false);
+     await loadDefaults(); 
 
     loadFarmers();
 
@@ -237,6 +238,7 @@ const handleKataFarmerTypeChange = async (e) => {
   else if (selectedType === "pen") {
 
     setIsSavedPatti(false);
+     await loadDefaults(); 
 
     loadFarmers();
 
@@ -244,10 +246,19 @@ const handleKataFarmerTypeChange = async (e) => {
 
   else if (selectedType === "saved") {
 
-  setIsSavedPatti(true);
+    setIsSavedPatti(true);
 
-  // Use the currently selected date
-  loadSavedFarmers(formData.patti_date);
+    setFormData(prev => ({
+        ...prev,
+        farmer_name: "",
+        address: "",
+        book_no: "",
+        serial_no: ""
+    }));
+
+    setItems([]);
+
+    loadSavedFarmers(formData.patti_date);
 
 }
   else {

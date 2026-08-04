@@ -264,6 +264,7 @@ const handleKataTraderTypeChange = async (e) => {
   if (selectedType === "all") {
 
     setIsSavedPatti(false);
+    await loadDefaults();  
     loadTraders();
 
   }
@@ -271,15 +272,26 @@ const handleKataTraderTypeChange = async (e) => {
   else if (selectedType === "pen") {
 
     setIsSavedPatti(false);
+    await loadDefaults();  
     loadTraders();
 
   }
 
-  else if (selectedType === "saved") {
+ else if (selectedType === "saved") {
 
-  setIsSavedPatti(true);
+    setIsSavedPatti(true);
 
-  loadSavedTraders(formData.patti_date);
+    setFormData(prev => ({
+        ...prev,
+        trader_name: "",
+        address: "",
+        book_no: "",
+        serial_no: ""
+    }));
+
+    setItems([]);
+
+    loadSavedTraders(formData.patti_date);
 
 }
 
