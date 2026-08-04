@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./FarmersDueReport.css";
+import API from "../../api";
 
 function FarmersDueReport({ setPage }) {
 
@@ -27,7 +28,7 @@ function FarmersDueReport({ setPage }) {
 
       const response = await fetch(
 
-        "https://mirchi1-2.onrender.com/farmers-due-report/"
+        `${API}/farmers-due-report/`
 
       );
 

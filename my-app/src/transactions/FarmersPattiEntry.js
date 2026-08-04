@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./FarmersPattiEntry.css";
+import API from "../api";
 
-function FarmersPattiEntry() {
+function FarmersPattiEntry({ setPage, setPrintData } ) {
 
   const [farmers, setFarmers] = useState([]);
   const [items, setItems] = useState([]);
@@ -48,7 +49,7 @@ function FarmersPattiEntry() {
     try {
 
       const response = await fetch(
-        "https://mirchi1-2.onrender.com/katalist1/farmers"
+        `${API}/katalist1/farmers`
       );
 
       const data = await response.json();
@@ -76,7 +77,7 @@ const loadFarmerDetails = async (
 
     const response = await fetch(
 
-      `https://mirchi1-2.onrender.com/katalist1/farmer/${encodeURIComponent(
+      `${API}/katalist1/farmer/${encodeURIComponent(
         farmerName
       )}?entry_date=${entryDate}`
 
@@ -103,7 +104,7 @@ const loadAccountAddress = async (farmerName) => {
   try {
 
     const response = await fetch(
-      `https://mirchi1-2.onrender.com/accounts/address/${encodeURIComponent(farmerName)}`
+      `${API}/accounts/address/${encodeURIComponent(farmerName)}`
     );
 
     const data = await response.json();
@@ -130,7 +131,7 @@ const loadSavedFarmers = async (selectedDate) => {
   try {
 
     const response = await fetch(
-      `https://mirchi1-2.onrender.com/farmers-patti/farmers?patti_date=${selectedDate}`
+      `${API}/farmers-patti/farmers?patti_date=${selectedDate}`
     );
 
     const data = await response.json();
@@ -154,7 +155,7 @@ const loadDefaults = async () => {
   try {
 
     const response = await fetch(
-      "https://mirchi1-2.onrender.com/farmers-patti/next-defaults"
+      `${API}/farmers-patti/next-defaults`
     );
 
     const data = await response.json();
@@ -366,7 +367,7 @@ const loadSavedPatti = async (farmerName, selectedDate) => {
 
     // Load Address
     const accountResponse = await fetch(
-      `https://mirchi1-2.onrender.com/accounts/address/${encodeURIComponent(farmerName)}`
+      `${API}/accounts/address/${encodeURIComponent(farmerName)}`
     );
 
     if (accountResponse.ok) {
@@ -379,7 +380,7 @@ const loadSavedPatti = async (farmerName, selectedDate) => {
 
     // Load Saved Patti
     const response = await fetch(
-      `https://mirchi1-2.onrender.com/farmers-patti/search?farmer_name=${encodeURIComponent(
+      `${API}/farmers-patti/search?farmer_name=${encodeURIComponent(
         farmerName
       )}&patti_date=${selectedDate}`
     );
@@ -448,7 +449,7 @@ const loadSavedPatti = async (farmerName, selectedDate) => {
 
     // Load Item Details
     const itemsResponse = await fetch(
-      `https://mirchi1-2.onrender.com/farmers-patti/farmer/${encodeURIComponent(
+      `${API}/farmers-patti/farmer/${encodeURIComponent(
         farmerName
       )}?patti_date=${selectedDate}`
     );
@@ -763,7 +764,7 @@ const handleSave = async () => {
 
       const response = await fetch(
 
-        "https://mirchi1-2.onrender.com/farmers-patti/",
+       `${API}/farmers-patti/`,
 
         {
 
@@ -951,10 +952,17 @@ const handlePrint = (language) => {
 
   setShowPrintMenu(false);
 
-  window.open(
-    `/farmer-patti-print?language=${language}&farmer=${encodeURIComponent(formData.farmer_name)}`,
-    "_blank"
-  );
+  setPrintData({
+
+    farmer_name: formData.farmer_name,
+
+    patti_date: formData.patti_date,
+
+    language: language
+
+  });
+
+  setPage("farmerspattiprint");
 
 };
   // ================= LOAD ON PAGE OPEN =================

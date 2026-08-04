@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./AccountsList.css";
+import API from "../../api";
 
 function AccountsList() {
 
@@ -45,7 +46,7 @@ function AccountsList() {
     try {
 
       const response = await fetch(
-        "https://mirchi1-2.onrender.com/accounts/next-account-number"
+        `${API}/accounts/next-account-number`
       );
 
       if (response.ok) {
@@ -81,7 +82,7 @@ function AccountsList() {
   try {
 
     const response = await fetch(
-      `https://mirchi1-2.onrender.com/accounts/group/${encodeURIComponent(group)}/names`
+      `${API}/accounts/group/${encodeURIComponent(group)}/names`
     );
 
     if (response.ok) {
@@ -214,7 +215,7 @@ function AccountsList() {
     try {
 
       const response = await fetch(
-        `https://mirchi1-2.onrender.com/accounts/search?group_name=${encodeURIComponent(
+        `${API}/accounts/search?group_name=${encodeURIComponent(
           groupName
         )}&account_name=${encodeURIComponent(
           accountName
@@ -285,7 +286,7 @@ function AccountsList() {
     try {
 
       const response = await fetch(
-        "https://mirchi1-2.onrender.com/accounts/",
+        `${API}/accounts/`,
         {
 
           method: "POST",
@@ -363,7 +364,7 @@ function AccountsList() {
     try {
 
       const response = await fetch(
-        `https://mirchi1-2.onrender.com/accounts/${formData.account_no}`,
+        `${API}/accounts/${formData.account_no}`,
         {
 
           method: "PUT",
@@ -429,7 +430,7 @@ function AccountsList() {
     try {
 
       const response = await fetch(
-        `https://mirchi1-2.onrender.com/accounts/${formData.account_no}`,
+        `${API}/accounts/${formData.account_no}`,
         {
 
           method: "DELETE",

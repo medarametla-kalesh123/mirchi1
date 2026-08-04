@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./KataList1Entry.css";
-
+import API from "../api";
 function KataList1Entry() {
 
   const emptyForm = {
@@ -38,7 +38,7 @@ function KataList1Entry() {
   try {
 
     const response = await fetch(
-      "https://mirchi1-2.onrender.com/katalist1/recent"
+      `${API}/katalist1/recent`
     );
 
     const data = await response.json();
@@ -115,7 +115,7 @@ const handleChange = (e) => {
     try {
 
       const response = await fetch(
-        "https://mirchi1-2.onrender.com/accounts/group/Farmers"
+        `${API}/accounts/group/Farmers`
       );
 
       const data = await response.json();
@@ -137,7 +137,7 @@ const handleChange = (e) => {
     try {
 
       const response = await fetch(
-        "https://mirchi1-2.onrender.com/accounts/group/Traders"
+        `${API}/accounts/group/Traders`
       );
 
       const data = await response.json();
@@ -158,7 +158,7 @@ const loadDefaults = async () => {
   try {
 
     const response = await fetch(
-      "https://mirchi1-2.onrender.com/katalist1/next"
+      `${API}/katalist1/next`
     );
 
     const data = await response.json();
@@ -256,7 +256,7 @@ if (Number(formData.bags) <= 0) {
   try {
 
     const response = await fetch(
-      "https://mirchi1-2.onrender.com/katalist1/",
+      `${API}/katalist1/`,
       {
         method: "POST",
         headers: {
@@ -310,7 +310,7 @@ setFormData({
     try {
 
       const response = await fetch(
-        `https://mirchi1-2.onrender.com/katalist1/${formData.entry_no}`,
+        `${API}/katalist1/${formData.entry_no}`,
         {
 
           method: "PUT",
@@ -359,7 +359,7 @@ setFormData({
     try {
 
       const response = await fetch(
-        `https://mirchi1-2.onrender.com/katalist1/${formData.entry_no}`,
+        `${API}/katalist1/${formData.entry_no}`,
         {
 
           method: "DELETE"

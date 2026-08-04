@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./TradersDueReport.css";
+import API from "../../api";
 
 function TradersDueReport({ setPage }) {
 
@@ -30,7 +31,7 @@ function TradersDueReport({ setPage }) {
 
       const response = await fetch(
 
-        "https://mirchi1-2.onrender.com/traders-due-report/"
+        `${API}/traders-due-report/`
 
       );
 
@@ -68,7 +69,7 @@ function TradersDueReport({ setPage }) {
   };
   const loadTowns = async () => {
   const res = await fetch(
-    "https://mirchi1-2.onrender.com/accounts/group/Traders/towns"
+   `${API}/accounts/group/Traders/towns`
   );
 
   const data = await res.json();

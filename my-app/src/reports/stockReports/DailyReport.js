@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./DailyReport.css";
+import API from "../../api";
 
 function DailyReport() {
 
@@ -39,7 +40,7 @@ function DailyReport() {
 
       const response = await fetch(
 
-        `https://mirchi1-2.onrender.com/dailyreport/?report_date=${reportDate}`
+        `${API}/dailyreport/?report_date=${reportDate}`
 
       );
 

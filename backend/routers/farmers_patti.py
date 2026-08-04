@@ -17,7 +17,8 @@ from services.farmers_patti_service import (
     get_farmers_patti_by_date,
     get_next_defaults,
     search_farmers_patti,
-    get_saved_farmers
+    get_saved_farmers,
+    get_farmers_patti_print
 )
 
 router = APIRouter(
@@ -181,6 +182,28 @@ def fetch_by_date(
     return get_farmers_patti_by_date(
 
         db,
+
+        patti_date
+
+    )
+# ================= PRINT FARMER PATTI =================
+
+@router.get("/print")
+def fetch_farmers_patti_print(
+
+    farmer_name: str,
+
+    patti_date: date = Query(...),
+
+    db: Session = Depends(get_db)
+
+):
+
+    return get_farmers_patti_print(
+
+        db,
+
+        farmer_name,
 
         patti_date
 

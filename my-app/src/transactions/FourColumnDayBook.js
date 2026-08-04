@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./FourColumnDayBook.css";
+import API from "../api";
 
 function FourColumnDayBook() {
 
@@ -84,7 +85,7 @@ const [accounts, setAccounts] = useState([]);
 
       const response = await fetch(
 
-        `https://mirchi1-2.onrender.com/four-column-daybook/new/defaults?voucher_type=${encodeURIComponent(
+        `${API}/four-column-daybook/new/defaults?voucher_type=${encodeURIComponent(
           voucherType
         )}`
 
@@ -142,12 +143,12 @@ const [accounts, setAccounts] = useState([]);
   try {
 
     let url =
-      "https://mirchi1-2.onrender.com/accounts";
+      `${API}/accounts`;
 
     if (group !== "All Accs") {
 
       url =
-        `https://mirchi1-2.onrender.com/accounts/group/${group}`;
+       `${API}/accounts/group/${group}`;
 
     }
 
@@ -351,7 +352,7 @@ const [accounts, setAccounts] = useState([]);
         const response =
           await fetch(
 
-            "https://mirchi1-2.onrender.com/four-column-daybook/",
+            `${API}/four-column-daybook/`,
 
             {
 

@@ -233,3 +233,79 @@ def get_saved_farmers(
         if farmer[0]
 
     ]
+    # ================= PRINT FARMER PATTI =================
+
+
+
+
+def get_farmers_patti_print(
+    db: Session,
+    farmer_name: str,
+    patti_date
+):
+
+    records = (
+        db.query(FarmersPatti)
+        .filter(
+            FarmersPatti.farmer_name == farmer_name,
+            FarmersPatti.patti_date == patti_date
+        )
+        .all()
+    )
+
+    if not records:
+        raise HTTPException(
+            status_code=404,
+            detail="Farmer Patti Not Found"
+        )
+
+    first = records[0]
+
+    items = []
+
+    total_net_value = 0
+
+    for record in records:
+
+        items.append({
+
+            "item_name": record.item_name,
+            "boras": record.boras,
+            "bags": record.bags,
+            "net_weight": record.net_weight,
+            "rate": record.gross_amount,
+            "net_value": record.net_value
+
+        })
+
+        total_net_value += float(record.net_value or 0)
+
+    return {
+
+        "farmer_name": first.farmer_name,
+        "address": first.address,
+        "bill_no": f"{first.serial_no}/{first.book_no}",
+        "date": first.patti_date,
+
+        "items": items,
+
+        "total_net_value": total_net_value,
+
+        "commission": first.commission,
+        "expense": first.expense,
+        "yard_charges": first.yard_charges,
+        "machu": first.machu,
+        "nettu_cooli": first.nettu_cooli,
+        "freight": first.freight,
+        "kata_cooli": first.kata_cooli,
+        "tolakam": first.tolakam,
+        "rasi_cooli": first.rasi_cooli,
+        "cash_advance": first.cash_advance,
+        "loan_amount": first.loan_amount,
+        "interest": first.interest,
+
+        "total_charges": first.total_charges,
+        "total_bill": first.total_bill,
+        "rounding_off": first.rounding_off
+
+    }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./TradersPattiEntry.css";
+import API from "../api";
 
 function TradersPattiEntry() {
 
@@ -46,7 +47,7 @@ function TradersPattiEntry() {
     try {
 
       const response = await fetch(
-        "https://mirchi1-2.onrender.com/traderspatti/next-defaults"
+        `${API}/traderspatti/next-defaults`
       );
 
       const data = await response.json();
@@ -83,7 +84,7 @@ const loadSavedTraders = async (selectedDate) => {
   try {
 
     const response = await fetch(
-      `https://mirchi1-2.onrender.com/traderspatti/saved-traders?patti_date=${selectedDate}`
+      `${API}/traderspatti/saved-traders?patti_date=${selectedDate}`
     );
 
     const data = await response.json();
@@ -110,7 +111,7 @@ const loadSavedTraders = async (selectedDate) => {
     try {
 
       const response = await fetch(
-        "https://mirchi1-2.onrender.com/katalist1/traders"
+        `${API}/katalist1/traders`
       );
 
       const data = await response.json();
@@ -136,7 +137,7 @@ const loadSavedTraders = async (selectedDate) => {
 
       const response = await fetch(
 
-        `https://mirchi1-2.onrender.com/katalist1/trader/${encodeURIComponent(
+        `${API}/katalist1/trader/${encodeURIComponent(
           traderName
         )}?entry_date=${selectedDate}`
 
@@ -207,7 +208,7 @@ const loadSavedTraders = async (selectedDate) => {
   try {
 
     const response = await fetch(
-      `https://mirchi1-2.onrender.com/accounts/address/${encodeURIComponent(traderName)}`
+      `${API}/accounts/address/${encodeURIComponent(traderName)}`
     );
 
     const data = await response.json();
@@ -312,7 +313,7 @@ const loadSavedPatti = async (traderName, selectedDate) => {
 
     // Get Address
     const accountResponse = await fetch(
-      `https://mirchi1-2.onrender.com/accounts/address/${encodeURIComponent(traderName)}`
+      `${API}/accounts/address/${encodeURIComponent(traderName)}`
     );
 
     if (accountResponse.ok) {
@@ -325,7 +326,7 @@ const loadSavedPatti = async (traderName, selectedDate) => {
 
     // Get Saved Patti by Trader + Date
     const response = await fetch(
-      `https://mirchi1-2.onrender.com/traderspatti/trader/${encodeURIComponent(
+    `${API}/traderspatti/trader/${encodeURIComponent(
         traderName
       )}?patti_date=${selectedDate}`
     );
@@ -580,7 +581,7 @@ setIsSavedPatti(false);
 
       const response = await fetch(
 
-        "https://mirchi1-2.onrender.com/traderspatti/",
+        `${API}/traderspatti/`,
 
         {
 
