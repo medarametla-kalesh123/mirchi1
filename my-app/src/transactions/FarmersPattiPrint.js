@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./FarmersPattiPrint.css";
+import API from "../api";
 
 function FarmersPattiPrint({ printData, setPage }) {
 
@@ -9,7 +10,7 @@ function FarmersPattiPrint({ printData, setPage }) {
 
     fetch(
 
-      `http://127.0.0.1:8000/farmers-patti/print?farmer_name=${encodeURIComponent(
+      `${API}/farmers-patti/print?farmer_name=${encodeURIComponent(
         printData.farmer_name
       )}&patti_date=${printData.patti_date}`
 
