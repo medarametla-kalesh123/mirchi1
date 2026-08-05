@@ -1,74 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef } from "react";
 import "./FarmersPattiPrint.css";
-import API from "../api";
 
-function FarmersPattiPrint({ printData, setPage }) {
+const FarmersPattiPrint = forwardRef(({ printData, setPage }, ref) => {
 
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-
-    fetch(
-
-      `${API}/farmers-patti/print?farmer_name=${encodeURIComponent(
-        printData.farmer_name
-      )}&patti_date=${printData.patti_date}`
-
-    )
-
-      .then((res) => res.json())
-
-      .then((result) => {
-
-        setData(result);
-
-        setTimeout(() => {
-
-          window.print();
-
-        }, 500);
-
-      })
-
-      .catch((err) => {
-
-        console.log(err);
-
-      });
-
-  }, [printData]);
-
-  if (!data) {
-
-    return <h2>Loading...</h2>;
-
+  if (!printData) {
+    return null;
   }
 
   return (
 
-    <div className="print-container">
+    <div ref={ref} className="print-container">
 
-      <h2 className="title">FARMER PATTI</h2>
+      {/* ================= TITLE ================= */}
+
+      <h1 className="title">
+        FARMER PATTI
+      </h1>
+
+      {/* ================= HEADER ================= */}
 
       <div className="top-row">
 
         <div>
 
-          <p><b>Farmer :</b> {data.farmer_name}</p>
+          <p><strong>Farmer :</strong> {printData.farmer_name}</p>
 
-          <p><b>Address :</b> {data.address}</p>
+          <p><strong>Address :</strong> {printData.address}</p>
 
         </div>
 
         <div>
 
-          <p><b>Bill No :</b> {data.bill_no}</p>
+          <p><strong>Bill No :</strong> {printData.bill_no}</p>
 
-          <p><b>Date :</b> {data.date}</p>
+          <p><strong>Date :</strong> {printData.date}</p>
 
         </div>
 
       </div>
+
+      {/* ================= ITEMS ================= */}
 
       <table className="items-table">
 
@@ -76,17 +47,13 @@ function FarmersPattiPrint({ printData, setPage }) {
 
           <tr>
 
-            <th>Net Value</th>
-
+            <th>S.No</th>
             <th>Item</th>
-
             <th>Boras</th>
-
             <th>Bags</th>
-
             <th>Net Weight</th>
-
-            <th>Rate</th>
+            <th>Rate / Qtl</th>
+            <th>Net Value</th>
 
           </tr>
 
@@ -94,21 +61,17 @@ function FarmersPattiPrint({ printData, setPage }) {
 
         <tbody>
 
-          {data.items.map((item, index) => (
+          {printData.items.map((item, index) => (
 
             <tr key={index}>
 
-              <td>{item.net_value}</td>
-
+              <td>{index + 1}</td>
               <td>{item.item_name}</td>
-
               <td>{item.boras}</td>
-
               <td>{item.bags}</td>
-
               <td>{item.net_weight}</td>
-
               <td>{item.rate}</td>
+              <td>{item.net_value}</td>
 
             </tr>
 
@@ -118,67 +81,111 @@ function FarmersPattiPrint({ printData, setPage }) {
 
       </table>
 
-      <h3>Total Net Value : ₹ {data.total_net_value}</h3>
+      {/* ================= SUMMARY ================= */}
 
       <div className="bottom-section">
 
-        <div>
+        <div className="summary-box">
 
-          <h3>
+          <table className="summary-table">
 
-            Amount Payable :
+            <tbody>
 
-            ₹ {data.rounding_off}
+              <tr>
 
-          </h3>
+                <td><strong>Total Net Value</strong></td>
+
+                <td>₹ {printData.total_net_value}</td>
+
+              </tr>
+
+              <tr>
+
+                <td><strong>Total Charges</strong></td>
+
+                <td>₹ {printData.total_charges}</td>
+
+              </tr>
+
+              <tr className="payable-row">
+
+                <td><strong>Amount Payable</strong></td>
+
+                <td><strong>₹ {printData.rounding_off}</strong></td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
 
         </div>
 
-        <div>
+        <div className="charges-box">
 
           <h3>Total Charges</h3>
 
-          <p>Commission : {data.commission}</p>
+          <table className="charges-table">
 
-          <p>Expense : {data.expense}</p>
+            <tbody>
 
-          <p>Yard Charges : {data.yard_charges}</p>
+              <tr><td>Commission</td><td>{printData.commission}</td></tr>
 
-          <p>Machu : {data.machu}</p>
+              <tr><td>Expense</td><td>{printData.expense}</td></tr>
 
-          <p>Nettu Cooli : {data.nettu_cooli}</p>
+              <tr><td>Yard Charges</td><td>{printData.yard_charges}</td></tr>
 
-          <p>Freight : {data.freight}</p>
+              <tr><td>Machu</td><td>{printData.machu}</td></tr>
 
-          <p>Kata Cooli : {data.kata_cooli}</p>
+              <tr><td>Nettu Cooli</td><td>{printData.nettu_cooli}</td></tr>
 
-          <p>Tolakam : {data.tolakam}</p>
+              <tr><td>Freight</td><td>{printData.freight}</td></tr>
 
-          <p>Rasi Cooli : {data.rasi_cooli}</p>
+              <tr><td>Kata Cooli</td><td>{printData.kata_cooli}</td></tr>
 
-          <p>Cash Advance : {data.cash_advance}</p>
+              <tr><td>Tolakam</td><td>{printData.tolakam}</td></tr>
 
-          <p>Loan Amount : {data.loan_amount}</p>
+              <tr><td>Rasi Cooli</td><td>{printData.rasi_cooli}</td></tr>
 
-          <p>Interest : {data.interest}</p>
+              <tr><td>Cash Advance</td><td>{printData.cash_advance}</td></tr>
 
-          <hr />
+              <tr><td>Loan Amount</td><td>{printData.loan_amount}</td></tr>
 
-          <h4>Total Charges : {data.total_charges}</h4>
+              <tr><td>Interest</td><td>{printData.interest}</td></tr>
+
+            </tbody>
+
+          </table>
 
         </div>
 
       </div>
 
+      {/* ================= SIGNATURES ================= */}
+
       <div className="signatures">
 
-        <span>Farmer Signature</span>
+        <div>
 
-        <span>Authorized Signature</span>
+          ______________________
+
+          <br />
+
+          Farmer Signature
+
+        </div>
+
+        <div>
+
+          ______________________
+
+          <br />
+
+          Authorized Signature
+
+        </div>
 
       </div>
-
-      <br />
 
       <button
         className="back-btn"
@@ -191,6 +198,6 @@ function FarmersPattiPrint({ printData, setPage }) {
 
   );
 
-}
+});
 
 export default FarmersPattiPrint;

@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./FarmersPattiEntry.css";
+
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+import FarmersPattiPrint from "./FarmersPattiPrint";
 import API from "../api";
 
-function FarmersPattiEntry({ setPage, setPrintData } ) {
+function FarmersPattiEntry({ setPage } ) {
 
   const [farmers, setFarmers] = useState([]);
   const [items, setItems] = useState([]);
@@ -40,7 +44,18 @@ function FarmersPattiEntry({ setPage, setPrintData } ) {
     net_value: 0
 
   });
+const printRef = useRef(null);
 
+const [printData, setPrintData] = useState({
+  farmer_name: "",
+  patti_date: "",
+  language: "english",
+  items: [],
+});
+const handleReactPrint = useReactToPrint({
+  contentRef: printRef,
+  documentTitle: "Farmers Patti",
+});
 
   // ================= LOAD FARMERS =================
 
@@ -793,6 +808,7 @@ const handleSave = async () => {
             bags: item.bags || 0,
             boras: item.boras || 0,
             net_weight: item.net_weight || 0,
+            rate_per_qtl:item.rate_per_qtl ||0,
             gross_amount: Number(item.gross_amount || 0),
             cost_of_bags: Number(item.cost_of_bags || 0),
             market_fee: Number(item.market_fee || 0),
@@ -948,21 +964,37 @@ const handleSave = async () => {
   await loadDefaults();
 
 };
-const handlePrint = (language) => {
+const loadPrintData = async (farmerName, pattiDate) => {
+  const response = await fetch(
+    `${API}/farmers-patti/print?farmer_name=${encodeURIComponent(farmerName)}&patti_date=${pattiDate}`
+  );
+
+  const result = await response.json();
+
+  return result;
+};
+const handlePrint = async (language) => {
 
   setShowPrintMenu(false);
 
+  const result = await loadPrintData(
+    formData.farmer_name,
+    formData.patti_date
+  );
+
+  if (!result) {
+    alert("Unable to load print data");
+    return;
+  }
+
   setPrintData({
-
-    farmer_name: formData.farmer_name,
-
-    patti_date: formData.patti_date,
-
-    language: language
-
+    ...result,
+    language,
   });
 
-  setPage("farmerspattiprint");
+  requestAnimationFrame(() => {
+    handleReactPrint();
+  });
 
 };
   // ================= LOAD ON PAGE OPEN =================
@@ -1291,9 +1323,9 @@ useEffect(() => {
           <input
             type="number"
             value={
-              item.rate_per_quintal ??
-              item.farmer_price ??
-              0
+              item.rate_per_qtl||0
+            
+              
             }
             readOnly
           />
@@ -2026,46 +2058,56 @@ Save
 
         </button>
 
-
         <div className="print-dropdown">
 
-  <button
-    className="print-btn"
-    onClick={() => setShowPrintMenu(!showPrintMenu)}
-  >
-    Print ▼
-  </button>
+          <button
+            className="print-btn"
+            onClick={() => setShowPrintMenu(!showPrintMenu)}
+          >
+            Print ▼
+          </button>
 
-  {showPrintMenu && (
+          {showPrintMenu && (
 
-    <div className="print-menu">
+            <div className="print-menu">
 
-      <button onClick={() => handlePrint("english")}>
-        English
-      </button>
+              <button onClick={() => handlePrint("english")}>
+                English
+              </button>
 
-      <button onClick={() => handlePrint("telugu")}>
-        తెలుగు
-      </button>
+              <button onClick={() => handlePrint("telugu")}>
+                తెలుగు
+              </button>
 
-      <button onClick={() => handlePrint("hindi")}>
-        हिन्दी
-      </button>
+              <button onClick={() => handlePrint("hindi")}>
+                हिन्दी
+              </button>
 
-      <button onClick={() => handlePrint("tamil")}>
-        தமிழ்
-      </button>
+              <button onClick={() => handlePrint("tamil")}>
+                தமிழ்
+              </button>
 
-    </div>
+            </div>
 
-    
+          )}
 
-  )}
+        </div>
 
+        {/* Hidden Printable Component */}
+        <div
+  style={{
+    position: "absolute",
+    left: "-10000px",
+    top: 0,
+  }}
+>
+  <FarmersPattiPrint
+    ref={printRef}
+    printData={printData}
+    setPage={setPage}
+  />
 </div>
-
       </div>
-
 
     </div>
 

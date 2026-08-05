@@ -566,7 +566,7 @@ setIsSavedPatti(false);
         boras: item.boras,
         net_weight: item.net_weight,
 
-        rate_per_qtl: item.rate_per_quintal,
+        rate_per_qtl: item.rate_per_qtl,
         actual_price: item.actual_price,
 
         gross_amount: item.gross_amount,
@@ -981,7 +981,7 @@ setIsSavedPatti(false);
 
         <input
           type="number"
-          value={item.rate_per_quintal || 0}
+          value={item.rate_per_qtl || 0}
           readOnly
         />
 

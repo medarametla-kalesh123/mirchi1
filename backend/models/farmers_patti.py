@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Date
+from sqlalchemy import Column, Integer, String, Float, Date,DECIMAL
 
 from database import Base
 
@@ -24,6 +24,7 @@ class FarmersPatti(Base):
     bags = Column(Float)
     boras = Column(Float)
     net_weight = Column(Float)
+    rate_per_qtl = Column(DECIMAL(12,2), default=0)
 
     gross_amount = Column(Float)
     cost_of_bags = Column(Float)

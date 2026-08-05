@@ -20,6 +20,7 @@ class FarmersPattiCreate(BaseModel):
     bags: float
     boras: float
     net_weight: float
+    rate_per_qtl: float
 
     gross_amount: float
     cost_of_bags: float

@@ -1,15 +1,18 @@
 .print-container {
-    width: 900px;
+    width: 1000px;
     margin: 20px auto;
-    padding: 20px;
+    padding: 30px;
     background: white;
     color: black;
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
 }
 
 .title {
     text-align: center;
-    margin-bottom: 20px;
+    font-size: 38px;
+    font-weight: bold;
+    margin-bottom: 25px;
 }
 
 .top-row {
@@ -18,10 +21,15 @@
     margin-bottom: 20px;
 }
 
+.top-row p {
+    margin: 5px 0;
+    font-size: 18px;
+}
+
 .items-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .items-table th,
@@ -29,20 +37,58 @@
     border: 1px solid black;
     padding: 8px;
     text-align: center;
+    font-size: 16px;
 }
 
 .bottom-section {
     display: flex;
     justify-content: space-between;
-    margin-top: 30px;
+    align-items: flex-start;
+    gap: 30px;
 }
 
-.bottom-section > div:first-child {
-    width: 45%;
+.summary-box {
+    width: 35%;
 }
 
-.bottom-section > div:last-child {
-    width: 40%;
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.summary-table td {
+    border: 1px solid black;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.payable-row td {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.charges-box {
+    width: 60%;
+}
+
+.charges-box h3 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.charges-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.charges-table td {
+    border: 1px solid black;
+    padding: 7px;
+    font-size: 15px;
+}
+
+.charges-table td:last-child {
+    text-align: right;
 }
 
 .signatures {
@@ -50,28 +96,114 @@
     justify-content: space-between;
     margin-top: 70px;
     font-weight: bold;
+    text-align: center;
+}
+
+.signatures div {
+    width: 220px;
 }
 
 .back-btn {
     display: block;
-    margin: 30px auto;
-    padding: 10px 25px;
+    margin: 40px auto;
+    padding: 10px 30px;
     cursor: pointer;
+}
+
+/* ================= PRINT ================= */
+
+@page {
+    size: A4 portrait;
+    margin: 10mm;
 }
 
 @media print {
 
-    .back-btn {
-        display: none;
+    html,
+    body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+        background: white;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
-    body {
-        margin: 0;
+    body * {
+        visibility: hidden;
+    }
+
+    .print-container,
+    .print-container * {
+        visibility: visible;
     }
 
     .print-container {
-        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        width: 190mm;
+        min-height: 277mm;
+
         margin: 0;
-        padding: 15px;
+        padding: 8mm;
+
+        background: white;
+
+        box-sizing: border-box;
+    }
+
+    .title {
+        font-size: 26px;
+        margin-bottom: 15px;
+    }
+
+    .top-row p {
+        font-size: 13px;
+    }
+
+    .items-table th,
+    .items-table td {
+        font-size: 11px;
+        padding: 5px;
+    }
+
+    .bottom-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .summary-box {
+        width: 34%;
+    }
+
+    .charges-box {
+        width: 62%;
+    }
+
+    .summary-table td,
+    .charges-table td {
+        font-size: 11px;
+        padding: 5px;
+    }
+
+    .payable-row td {
+        font-size: 18px;
+    }
+
+    .signatures {
+        margin-top: 35px;
+        font-size: 12px;
+    }
+
+    .back-btn,
+    nav,
+    header {
+        display: none !important;
     }
 }

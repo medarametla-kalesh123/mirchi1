@@ -335,7 +335,7 @@ def get_trader_details(
 
             "net_weight": row.net_weight,
 
-            "rate_per_quintal": row.trader_price,
+            "rate_per_qtl": row.trader_price,
 
             "trader_price": row.trader_price,
 
@@ -414,7 +414,7 @@ def get_farmer_details(
             "bags": row.bags,
             "boras": row.boras,
             "net_weight": row.net_weight,
-            "rate_per_quintal": row.farmer_price,
+            "rate_per_qtl": row.farmer_price,
             "farmer_price": row.farmer_price,
             "gross_amount": gross_amount,
             "cost_of_bags": cost_of_bags,

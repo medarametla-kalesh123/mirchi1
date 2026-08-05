@@ -80,18 +80,14 @@ import ToolStandardNarrations from "./tools/StandardNarrations";
 import ReportViewer from "./tools/ReportViewer";
 import DatabaseVerification from "./tools/DatabaseVerification";
 
-import FarmersPattiPrint from "./transactions/FarmersPattiPrint";
+
 
 
 function App() {
 
   const [page, setPage] = useState("dashboard");
 
-  const [printData, setPrintData] = useState({
-  farmer_name: "",
-  patti_date: "",
-  language: "english"
-});
+  
 
   return (
     <>
@@ -114,16 +110,10 @@ function App() {
       {page === "farmerspattientry" && (
   <FarmersPattiEntry
     setPage={setPage}
-    setPrintData={setPrintData}
+   
   />
 )}
-{page === "farmerspattiprint" && (
-  <FarmersPattiPrint
-    printData={printData}
-    setPage={setPage}
-  />
-)}
-      {page === "traderspattientry" && <TradersPattiEntry />}
+  {page === "traderspattientry" && <TradersPattiEntry />}
       {page === "katalist1entry" && <KataList1Entry />}
       {page === "katalist2entry" && <KataList2Entry />}
       {page === "farmerdc" && <FarmerDC />}

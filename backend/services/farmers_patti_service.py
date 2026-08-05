@@ -66,6 +66,7 @@ def create_farmers_patti(
         bags=farmers_patti.bags,
         boras=farmers_patti.boras,
         net_weight=farmers_patti.net_weight,
+        rate_per_qtl=farmers_patti.rate_per_qtl,
 
         gross_amount=farmers_patti.gross_amount,
         cost_of_bags=farmers_patti.cost_of_bags,
@@ -273,7 +274,7 @@ def get_farmers_patti_print(
             "boras": record.boras,
             "bags": record.bags,
             "net_weight": record.net_weight,
-            "rate": record.gross_amount,
+            "rate": record.rate_per_qtl,
             "net_value": record.net_value
 
         })
