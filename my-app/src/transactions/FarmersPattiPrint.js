@@ -16,7 +16,9 @@ const FarmersPattiPrint = forwardRef(
         {/* ================= TITLE ================= */}
 
         <h1 className="title">
+
           FARMERS PATTI
+
         </h1>
 
         {/* ================= HEADER ================= */}
@@ -28,7 +30,6 @@ const FarmersPattiPrint = forwardRef(
             <p>
 
               <strong>Farmer :</strong>{" "}
-
               {printData.farmer_name}
 
             </p>
@@ -36,7 +37,6 @@ const FarmersPattiPrint = forwardRef(
             <p>
 
               <strong>Address :</strong>{" "}
-
               {printData.address}
 
             </p>
@@ -48,7 +48,6 @@ const FarmersPattiPrint = forwardRef(
             <p>
 
               <strong>Bill No :</strong>{" "}
-
               {printData.bill_no}
 
             </p>
@@ -56,7 +55,6 @@ const FarmersPattiPrint = forwardRef(
             <p>
 
               <strong>Date :</strong>{" "}
-
               {printData.date}
 
             </p>
@@ -97,41 +95,17 @@ const FarmersPattiPrint = forwardRef(
 
               <tr key={index}>
 
-                <td>
+                <td>{index + 1}</td>
 
-                  {index + 1}
+                <td>{item.item_name}</td>
 
-                </td>
+                <td>{item.boras}</td>
 
-                <td>
+                <td>{item.bags}</td>
 
-                  {item.item_name}
+                <td>{item.net_weight}</td>
 
-                </td>
-
-                <td>
-
-                  {item.boras}
-
-                </td>
-
-                <td>
-
-                  {item.bags}
-
-                </td>
-
-                <td>
-
-                  {item.net_weight}
-
-                </td>
-
-                <td>
-
-                  {item.rate}
-
-                </td>
+                <td>{item.rate}</td>
 
                 <td>
 
@@ -147,23 +121,65 @@ const FarmersPattiPrint = forwardRef(
 
         </table>
 
-        {/* ================= TOTAL NET VALUE ================= */}
+        {/* ================= ITEM SUMMARY ================= */}
 
-        <div className="net-value">
+        <table className="summary-table">
 
-          <span>
+          <tbody>
 
-            Total Net Value
+            <tr>
 
-          </span>
+              <td>
 
-          <span>
+                <strong>Gross Amount</strong>
 
-            ₹ {Number(printData.total_net_value).toFixed(2)}
+              </td>
 
-          </span>
+              <td>
 
-        </div>
+                ₹ {Number(printData.gross_amount).toFixed(2)}
+
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td>
+
+                <strong>Cost of Bags</strong>
+
+              </td>
+
+              <td>
+
+                ₹ {Number(printData.cost_of_bags).toFixed(2)}
+                {" "}
+                ({Number(printData.cost_per_bag).toFixed(2)}/Bag)
+
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td>
+
+                <strong>Total Net Value</strong>
+
+              </td>
+
+              <td>
+
+                ₹ {Number(printData.total_net_value).toFixed(2)}
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
 
         {/* ================= CHARGES ================= */}
 
@@ -181,7 +197,11 @@ const FarmersPattiPrint = forwardRef(
 
               <td>Commission</td>
 
-              <td>{printData.commission}</td>
+              <td>
+
+                ₹ {Number(printData.commission).toFixed(2)}
+
+              </td>
 
             </tr>
 
@@ -189,7 +209,11 @@ const FarmersPattiPrint = forwardRef(
 
               <td>Expense</td>
 
-              <td>{printData.expense}</td>
+              <td>
+
+                ₹ {Number(printData.expense).toFixed(2)}
+
+              </td>
 
             </tr>
 
@@ -197,7 +221,11 @@ const FarmersPattiPrint = forwardRef(
 
               <td>Yard Charges</td>
 
-              <td>{printData.yard_charges}</td>
+              <td>
+
+                ₹ {Number(printData.yard_charges).toFixed(2)}
+
+              </td>
 
             </tr>
 
@@ -205,7 +233,11 @@ const FarmersPattiPrint = forwardRef(
 
               <td>Machu</td>
 
-              <td>{printData.machu}</td>
+              <td>
+
+                ₹ {Number(printData.machu).toFixed(2)}
+
+              </td>
 
             </tr>
 
@@ -213,7 +245,11 @@ const FarmersPattiPrint = forwardRef(
 
               <td>Nettu Cooli</td>
 
-              <td>{printData.nettu_cooli}</td>
+              <td>
+
+                ₹ {Number(printData.nettu_cooli).toFixed(2)}
+
+              </td>
 
             </tr>
 
@@ -221,7 +257,11 @@ const FarmersPattiPrint = forwardRef(
 
               <td>Freight</td>
 
-              <td>{printData.freight}</td>
+              <td>
+
+                ₹ {Number(printData.freight).toFixed(2)}
+
+              </td>
 
             </tr>
 
@@ -229,7 +269,11 @@ const FarmersPattiPrint = forwardRef(
 
               <td>Kata Cooli</td>
 
-              <td>{printData.kata_cooli}</td>
+              <td>
+
+                ₹ {Number(printData.kata_cooli).toFixed(2)}
+
+              </td>
 
             </tr>
 
@@ -237,7 +281,11 @@ const FarmersPattiPrint = forwardRef(
 
               <td>Tolakam</td>
 
-              <td>{printData.tolakam}</td>
+              <td>
+
+                ₹ {Number(printData.tolakam).toFixed(2)}
+
+              </td>
 
             </tr>
 
@@ -245,7 +293,11 @@ const FarmersPattiPrint = forwardRef(
 
               <td>Rasi Cooli</td>
 
-              <td>{printData.rasi_cooli}</td>
+              <td>
+
+                ₹ {Number(printData.rasi_cooli).toFixed(2)}
+
+              </td>
 
             </tr>
 
@@ -356,13 +408,8 @@ const FarmersPattiPrint = forwardRef(
         {/* ================= BACK ================= */}
 
         <button
-
           className="back-btn"
-
-          onClick={() =>
-            setPage("farmerspattientry")
-          }
-
+          onClick={() => setPage("farmerspattientry")}
         >
 
           Back

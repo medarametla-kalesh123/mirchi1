@@ -20,7 +20,8 @@ from services.traderspatti_service import (
     get_next_defaults,
     update_traders_patti,
     delete_traders_patti,
-    get_saved_patti
+    get_saved_patti,
+    get_traders_patti_print 
 )
 
 router = APIRouter(
@@ -115,6 +116,27 @@ def saved_traders(
     return get_saved_traders(
         db,
         patti_date
+    )
+    
+    
+    # ================= PRINT TRADERS PATTI =================
+
+@router.get("/print")
+def print_traders_patti(
+
+    trader_name: str,
+    patti_date: date = Query(...),
+
+    db: Session = Depends(get_db)
+
+):
+
+    return get_traders_patti_print(
+
+        db,
+        trader_name,
+        patti_date
+
     )
 
 # ================= GET BY TRADER =================

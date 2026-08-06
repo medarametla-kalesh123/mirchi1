@@ -1,8 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef
+} from "react";
+
 import "./TradersPattiEntry.css";
 import API from "../api";
 
-function TradersPattiEntry() {
+import { useReactToPrint } from "react-to-print";
+
+import TradersPattiPrint from "./TradersPattiPrint";
+
+function TradersPattiEntry({setpage}) {
 
   const [traders, setTraders] = useState([]);
   const [items, setItems] = useState([]);
@@ -40,7 +49,72 @@ const [currentItemIndex, setCurrentItemIndex] =useState(0);
     period_to: ""
 
   });
+const printRef = useRef(null);
 
+const [showPrintMenu, setShowPrintMenu] = useState(false);
+
+const [printData, setPrintData] = useState({
+  trader_name: "",
+  patti_date: "",
+  language: "english",
+  items: [],
+});
+
+const handleReactPrint = useReactToPrint({
+  contentRef: printRef,
+  documentTitle: "Traders Patti",
+});
+
+const loadPrintData = async (traderName, pattiDate) => {
+
+  const response = await fetch(
+
+    `${API}/traderspatti/print?trader_name=${encodeURIComponent(
+      traderName
+    )}&patti_date=${pattiDate}`
+
+  );
+
+  const result = await response.json();
+
+  return result;
+
+};
+
+const handlePrint = async (language) => {
+
+  setShowPrintMenu(false);
+
+  const result = await loadPrintData(
+
+    formData.trader_name,
+    formData.patti_date
+
+  );
+
+  if (!result) {
+
+    alert("Unable to load print data");
+
+    return;
+
+  }
+
+  setPrintData({
+
+    ...result,
+
+    language
+
+  });
+
+  requestAnimationFrame(() => {
+
+    handleReactPrint();
+
+  });
+
+};
 
   //================ LOAD DEFAULTS =================
 
@@ -1391,7 +1465,64 @@ setIsSavedPatti(false);
 
   {/* ================= Print ================= */}
 
-  <button className="print-btn" > Print </button>
+ <div className="print-dropdown">
+
+  <button
+    className="print-btn"
+    onClick={() =>
+      setShowPrintMenu(!showPrintMenu)
+    }
+  >
+    Print ▼
+  </button>
+
+  {showPrintMenu && (
+
+    <div className="print-menu">
+
+      <button
+        onClick={() => handlePrint("english")}
+      >
+        English
+      </button>
+
+      <button
+        onClick={() => handlePrint("telugu")}
+      >
+        తెలుగు
+      </button>
+
+      <button
+        onClick={() => handlePrint("hindi")}
+      >
+        हिन्दी
+      </button>
+
+      <button
+        onClick={() => handlePrint("tamil")}
+      >
+        தமிழ்
+      </button>
+
+    </div>
+
+  )}
+  <div
+  style={{
+    position: "absolute",
+    left: "-10000px",
+    top: 0,
+  }}
+>
+
+  <TradersPattiPrint
+    ref={printRef}
+    printData={printData}
+  />
+
+</div>
+
+</div>
 
 </div>
 

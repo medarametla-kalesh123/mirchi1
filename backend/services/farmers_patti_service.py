@@ -335,6 +335,8 @@ def get_farmers_patti_print(
 
     items = []
 
+    gross_amount = 0
+    cost_of_bags = 0
     total_net_value = 0
 
     commission = 0
@@ -353,6 +355,8 @@ def get_farmers_patti_print(
 
     total_charges = 0
 
+    total_bags = 0
+
     for record in records:
 
         items.append({
@@ -367,7 +371,13 @@ def get_farmers_patti_print(
 
         })
 
+        gross_amount += float(record.gross_amount or 0)
+
+        cost_of_bags += float(record.cost_of_bags or 0)
+
         total_net_value += float(record.net_value or 0)
+
+        total_bags += record.bags or 0
 
         # ================= CALCULATED CHARGES =================
 
@@ -417,39 +427,73 @@ def get_farmers_patti_print(
         )
 
         cash_advance += record.cash_advance or 0
+
         loan_amount += record.loan_amount or 0
+
         interest += record.interest or 0
 
         total_charges += record.total_charges or 0
 
+    # Cost per bag
+    cost_per_bag = 0
+
+    if total_bags > 0:
+        cost_per_bag = cost_of_bags / total_bags
+
     return {
 
         "farmer_name": first.farmer_name,
+
         "address": first.address,
+
         "bill_no": f"{first.serial_no}/{first.book_no}",
+
         "date": first.patti_date,
 
         "items": items,
 
+        # ================= SUMMARY =================
+
+        "gross_amount": round(gross_amount, 2),
+
+        "cost_of_bags": round(cost_of_bags, 2),
+
+        "cost_per_bag": round(cost_per_bag, 2),
+
         "total_net_value": round(total_net_value, 2),
 
+        # ================= CHARGES =================
+
         "commission": round(commission, 2),
+
         "expense": round(expense, 2),
+
         "yard_charges": round(yard_charges, 2),
+
         "machu": round(machu, 2),
+
         "nettu_cooli": round(nettu_cooli, 2),
+
         "freight": round(freight, 2),
+
         "kata_cooli": round(kata_cooli, 2),
+
         "tolakam": round(tolakam, 2),
+
         "rasi_cooli": round(rasi_cooli, 2),
 
         "cash_advance": round(cash_advance, 2),
+
         "loan_amount": round(loan_amount, 2),
+
         "interest": round(interest, 2),
 
         "total_charges": round(total_charges, 2),
 
-        "total_bill": first.total_bill,
-        "rounding_off": first.rounding_off
+        # ================= FINAL =================
+
+        "total_bill": round(first.total_bill, 2),
+
+        "rounding_off": round(first.rounding_off, 2)
 
     }

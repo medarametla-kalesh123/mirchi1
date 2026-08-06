@@ -382,3 +382,97 @@ def delete_traders_patti(
         "message": "Trader Patti Deleted Successfully"
 
     }
+    
+    # ================= PRINT TRADERS PATTI =================
+
+def get_traders_patti_print(
+    db: Session,
+    trader_name: str,
+    patti_date
+):
+
+    records = (
+        db.query(TradersPatti)
+        .filter(
+            TradersPatti.trader_name == trader_name,
+            TradersPatti.patti_date == patti_date
+        )
+        .order_by(
+            TradersPatti.serial_no,
+            TradersPatti.book_no,
+            TradersPatti.id
+        )
+        .all()
+    )
+
+    if not records:
+        raise HTTPException(
+            status_code=404,
+            detail="Trader Patti Not Found"
+        )
+
+    first = records[0]
+
+    items = []
+
+    total_gross_amount = 0
+    total_cost_of_bags = 0
+    total_market_fee = 0
+    total_net_value = 0
+    total_bags = 0
+
+    bill_numbers = []
+
+    for record in records:
+
+        items.append({
+
+            "item_name": record.item_name,
+            "boras": record.boras,
+            "bags": record.bags,
+            "net_weight": record.net_weight,
+            "rate": record.rate_per_qtl,
+            "gross_amount": record.gross_amount,
+            "net_value": record.net_value
+
+        })
+
+        total_gross_amount += float(record.gross_amount or 0)
+        total_cost_of_bags += float(record.cost_of_bags or 0)
+        total_market_fee += float(record.market_fee or 0)
+        total_net_value += float(record.net_value or 0)
+        total_bags += int(record.bags or 0)
+
+        bill_no = f"{record.serial_no}/{record.book_no}"
+
+        if bill_no not in bill_numbers:
+            bill_numbers.append(bill_no)
+
+    cost_per_bag = 0
+
+    if total_bags > 0:
+        cost_per_bag = total_cost_of_bags / total_bags
+
+    return {
+
+        "trader_name": first.trader_name,
+
+        "address": first.address,
+
+        "bill_no": ", ".join(bill_numbers),
+
+        "date": first.patti_date,
+
+        "items": items,
+
+        "gross_amount": round(total_gross_amount, 2),
+
+        "cost_of_bags": round(total_cost_of_bags, 2),
+
+        "cost_per_bag": round(cost_per_bag, 2),
+
+        "market_fee": round(total_market_fee, 2),
+
+        "total_net_value": round(total_net_value, 2)
+
+    }
