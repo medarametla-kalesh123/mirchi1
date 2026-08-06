@@ -19,7 +19,8 @@ from services.traderspatti_service import (
     search_traders_patti,
     get_next_defaults,
     update_traders_patti,
-    delete_traders_patti
+    delete_traders_patti,
+    get_saved_patti
 )
 
 router = APIRouter(
@@ -60,18 +61,46 @@ def get_all_traders_patti(
 
 # ================= SEARCH TRADER =================
 
-@router.get(
-    "/search",
-    response_model=TradersPattiResponse
-)
+@router.get("/search")
 def search_trader(
+
     trader_name: str,
+    patti_date: date = Query(...),
+
     db: Session = Depends(get_db)
+
 ):
 
     return search_traders_patti(
+
         db,
-        trader_name
+        trader_name,
+        patti_date
+
+    )
+    
+    # ================= GET ONE SAVED PATTI =================
+
+@router.get("/saved")
+def fetch_saved_patti(
+
+    trader_name: str,
+    patti_date: date = Query(...),
+    serial_no: str = Query(...),
+    book_no: str = Query(...),
+
+    db: Session = Depends(get_db)
+
+):
+
+    return get_saved_patti(
+
+        db,
+        trader_name,
+        patti_date,
+        serial_no,
+        book_no
+
     )
 
 

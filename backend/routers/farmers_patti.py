@@ -18,8 +18,10 @@ from services.farmers_patti_service import (
     get_next_defaults,
     search_farmers_patti,
     get_saved_farmers,
-    get_farmers_patti_print
+    get_farmers_patti_print,
+    get_saved_patti
 )
+
 
 router = APIRouter(
 
@@ -112,10 +114,7 @@ def fetch_saved_farmers(
 
 # ================= SEARCH FARMER =================
 
-@router.get(
-    "/search",
-    response_model=FarmersPattiResponse
-)
+@router.get("/search")
 def search_farmer(
 
     farmer_name: str,
@@ -128,9 +127,32 @@ def search_farmer(
     return search_farmers_patti(
 
         db,
-
         farmer_name,
         patti_date
+
+    )
+    # ================= GET ONE SAVED PATTI =================
+
+@router.get("/saved")
+
+def fetch_saved_patti(
+
+    farmer_name: str,
+    patti_date: date = Query(...),
+    serial_no: str = Query(...),
+    book_no: str = Query(...),
+
+    db: Session = Depends(get_db)
+
+):
+
+    return get_saved_patti(
+
+        db,
+        farmer_name,
+        patti_date,
+        serial_no,
+        book_no
 
     )
 

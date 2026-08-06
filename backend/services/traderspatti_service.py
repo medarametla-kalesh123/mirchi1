@@ -87,29 +87,100 @@ def create_traders_patti(
 
 def search_traders_patti(
     db: Session,
-    trader_name: str
+    trader_name: str,
+    patti_date
 ):
 
-    trader = (
+    pattis = (
 
-        db.query(TradersPatti)
+        db.query(
 
-        .filter(
-            TradersPatti.trader_name == trader_name
+            TradersPatti.serial_no,
+            TradersPatti.book_no,
+            TradersPatti.patti_date
+
         )
 
-        .first()
+        .filter(
+
+            TradersPatti.trader_name == trader_name,
+            TradersPatti.patti_date == patti_date
+
+        )
+
+        .distinct()
+
+        .order_by(
+
+            TradersPatti.serial_no
+
+        )
+
+        .all()
 
     )
 
-    if not trader:
+    if not pattis:
 
         raise HTTPException(
             status_code=404,
             detail="Trader Patti Not Found"
         )
 
-    return trader
+    return [
+
+        {
+
+            "serial_no": row.serial_no,
+            "book_no": row.book_no,
+            "patti_date": row.patti_date
+
+        }
+
+        for row in pattis
+
+    ]
+    # ================= GET ONE SAVED PATTI =================
+
+def get_saved_patti(
+    db: Session,
+    trader_name: str,
+    patti_date,
+    serial_no,
+    book_no
+):
+
+    records = (
+
+        db.query(TradersPatti)
+
+        .filter(
+
+            TradersPatti.trader_name == trader_name,
+            TradersPatti.patti_date == patti_date,
+            TradersPatti.serial_no == serial_no,
+            TradersPatti.book_no == book_no
+
+        )
+
+        .order_by(
+
+            TradersPatti.id
+
+        )
+
+        .all()
+
+    )
+
+    if not records:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Trader Patti Not Found"
+        )
+
+    return records
 
 
 # ================= GET ALL =================

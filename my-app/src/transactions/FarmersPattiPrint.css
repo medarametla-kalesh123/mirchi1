@@ -1,79 +1,83 @@
+/* ================= SCREEN ================= */
+
 .print-container {
-    width: 1000px;
+    width: 900px;
     margin: 20px auto;
     padding: 30px;
-    background: white;
-    color: black;
+    background: #fff;
+    color: #000;
     font-family: Arial, Helvetica, sans-serif;
     box-sizing: border-box;
 }
 
 .title {
     text-align: center;
-    font-size: 38px;
+    font-size: 30px;
     font-weight: bold;
+    letter-spacing: 1px;
     margin-bottom: 25px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
 }
 
-.top-row {
+/* ================= HEADER ================= */
+
+.header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
 }
 
-.top-row p {
-    margin: 5px 0;
-    font-size: 18px;
+.header-left,
+.header-right {
+    width: 48%;
 }
+
+.header p {
+    margin: 6px 0;
+    font-size: 16px;
+}
+
+/* ================= ITEMS TABLE ================= */
 
 .items-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 25px;
+    margin-bottom: 18px;
 }
 
-.items-table th,
+.items-table th {
+    border: 1px solid #000;
+    padding: 8px;
+    font-size: 15px;
+    background: #f2f2f2;
+}
+
 .items-table td {
-    border: 1px solid black;
+    border: 1px solid #000;
     padding: 8px;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
 }
 
-.bottom-section {
+/* ================= NET VALUE ================= */
+
+.net-value {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 30px;
-}
-
-.summary-box {
-    width: 35%;
-}
-
-.summary-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.summary-table td {
-    border: 1px solid black;
-    padding: 10px;
-    font-size: 16px;
-}
-
-.payable-row td {
-    font-size: 28px;
+    font-size: 18px;
     font-weight: bold;
+    border: 2px solid #000;
+    padding: 10px 15px;
+    margin-bottom: 20px;
 }
 
-.charges-box {
-    width: 60%;
-}
+/* ================= CHARGES ================= */
 
-.charges-box h3 {
+.charges-title {
     text-align: center;
     margin-bottom: 10px;
+    font-size: 22px;
 }
 
 .charges-table {
@@ -82,8 +86,8 @@
 }
 
 .charges-table td {
-    border: 1px solid black;
-    padding: 7px;
+    border: 1px solid #000;
+    padding: 8px 10px;
     font-size: 15px;
 }
 
@@ -91,21 +95,42 @@
     text-align: right;
 }
 
+.charges-total {
+    font-weight: bold;
+    background: #ececec;
+}
+
+/* ================= AMOUNT PAYABLE ================= */
+
+.amount-payable {
+    margin-top: 25px;
+    border: 3px solid #000;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* ================= SIGNATURES ================= */
+
 .signatures {
     display: flex;
     justify-content: space-between;
     margin-top: 70px;
-    font-weight: bold;
     text-align: center;
+    font-weight: bold;
 }
 
 .signatures div {
-    width: 220px;
+    width: 250px;
 }
+
+/* ================= BUTTON ================= */
 
 .back-btn {
     display: block;
-    margin: 40px auto;
+    margin: 40px auto 0;
     padding: 10px 30px;
     cursor: pointer;
 }
@@ -140,6 +165,7 @@
     }
 
     .print-container {
+
         position: absolute;
         left: 0;
         top: 0;
@@ -148,7 +174,7 @@
         min-height: 277mm;
 
         margin: 0;
-        padding: 8mm;
+        padding: 6mm;
 
         background: white;
 
@@ -156,54 +182,49 @@
     }
 
     .title {
-        font-size: 26px;
+        font-size: 22px;
         margin-bottom: 15px;
+        padding-bottom: 6px;
     }
 
-    .top-row p {
-        font-size: 13px;
+    .header p {
+        font-size: 12px;
     }
 
     .items-table th,
     .items-table td {
-        font-size: 11px;
+        font-size: 10px;
         padding: 5px;
     }
 
-    .bottom-section {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 15px;
-        margin-top: 20px;
+    .net-value {
+        font-size: 13px;
+        padding: 7px 10px;
+        margin-bottom: 15px;
     }
 
-    .summary-box {
-        width: 34%;
+    .charges-title {
+        font-size: 16px;
+        margin-bottom: 6px;
     }
 
-    .charges-box {
-        width: 62%;
-    }
-
-    .summary-table td,
     .charges-table td {
-        font-size: 11px;
-        padding: 5px;
+        font-size: 10px;
+        padding: 5px 8px;
     }
 
-    .payable-row td {
+    .amount-payable {
+        margin-top: 15px;
         font-size: 18px;
+        padding: 10px;
     }
 
     .signatures {
-        margin-top: 35px;
-        font-size: 12px;
+        margin-top: 40px;
+        font-size: 11px;
     }
 
-    .back-btn,
-    nav,
-    header {
-        display: none !important;
+    .back-btn {
+        display: none;
     }
 }

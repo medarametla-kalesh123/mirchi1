@@ -1,203 +1,380 @@
 import React, { forwardRef } from "react";
 import "./FarmersPattiPrint.css";
 
-const FarmersPattiPrint = forwardRef(({ printData, setPage }, ref) => {
+const FarmersPattiPrint = forwardRef(
+  ({ printData, setPage }, ref) => {
 
-  if (!printData) {
-    return null;
-  }
+    if (!printData) return null;
 
-  return (
+    return (
 
-    <div ref={ref} className="print-container">
+      <div
+        ref={ref}
+        className="print-container"
+      >
 
-      {/* ================= TITLE ================= */}
+        {/* ================= TITLE ================= */}
 
-      <h1 className="title">
-        FARMER PATTI
-      </h1>
+        <h1 className="title">
+          FARMERS PATTI
+        </h1>
 
-      {/* ================= HEADER ================= */}
+        {/* ================= HEADER ================= */}
 
-      <div className="top-row">
+        <div className="header">
 
-        <div>
+          <div className="header-left">
 
-          <p><strong>Farmer :</strong> {printData.farmer_name}</p>
+            <p>
 
-          <p><strong>Address :</strong> {printData.address}</p>
+              <strong>Farmer :</strong>{" "}
+
+              {printData.farmer_name}
+
+            </p>
+
+            <p>
+
+              <strong>Address :</strong>{" "}
+
+              {printData.address}
+
+            </p>
+
+          </div>
+
+          <div className="header-right">
+
+            <p>
+
+              <strong>Bill No :</strong>{" "}
+
+              {printData.bill_no}
+
+            </p>
+
+            <p>
+
+              <strong>Date :</strong>{" "}
+
+              {printData.date}
+
+            </p>
+
+          </div>
 
         </div>
 
-        <div>
+        {/* ================= ITEMS ================= */}
 
-          <p><strong>Bill No :</strong> {printData.bill_no}</p>
+        <table className="items-table">
 
-          <p><strong>Date :</strong> {printData.date}</p>
+          <thead>
 
-        </div>
+            <tr>
 
-      </div>
+              <th>S.No</th>
 
-      {/* ================= ITEMS ================= */}
+              <th>Item</th>
 
-      <table className="items-table">
+              <th>Boras</th>
 
-        <thead>
+              <th>Bags</th>
 
-          <tr>
+              <th>Net Weight</th>
 
-            <th>S.No</th>
-            <th>Item</th>
-            <th>Boras</th>
-            <th>Bags</th>
-            <th>Net Weight</th>
-            <th>Rate / Qtl</th>
-            <th>Net Value</th>
+              <th>Rate / Qtl</th>
 
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {printData.items.map((item, index) => (
-
-            <tr key={index}>
-
-              <td>{index + 1}</td>
-              <td>{item.item_name}</td>
-              <td>{item.boras}</td>
-              <td>{item.bags}</td>
-              <td>{item.net_weight}</td>
-              <td>{item.rate}</td>
-              <td>{item.net_value}</td>
+              <th>Net Value</th>
 
             </tr>
 
-          ))}
+          </thead>
 
-        </tbody>
+          <tbody>
 
-      </table>
+            {printData.items.map((item, index) => (
 
-      {/* ================= SUMMARY ================= */}
+              <tr key={index}>
 
-      <div className="bottom-section">
+                <td>
 
-        <div className="summary-box">
+                  {index + 1}
 
-          <table className="summary-table">
+                </td>
 
-            <tbody>
+                <td>
 
-              <tr>
+                  {item.item_name}
 
-                <td><strong>Total Net Value</strong></td>
+                </td>
 
-                <td>₹ {printData.total_net_value}</td>
+                <td>
+
+                  {item.boras}
+
+                </td>
+
+                <td>
+
+                  {item.bags}
+
+                </td>
+
+                <td>
+
+                  {item.net_weight}
+
+                </td>
+
+                <td>
+
+                  {item.rate}
+
+                </td>
+
+                <td>
+
+                  ₹ {Number(item.net_value).toFixed(2)}
+
+                </td>
 
               </tr>
 
-              <tr>
+            ))}
 
-                <td><strong>Total Charges</strong></td>
+          </tbody>
 
-                <td>₹ {printData.total_charges}</td>
+        </table>
 
-              </tr>
+        {/* ================= TOTAL NET VALUE ================= */}
 
-              <tr className="payable-row">
+        <div className="net-value">
 
-                <td><strong>Amount Payable</strong></td>
+          <span>
 
-                <td><strong>₹ {printData.rounding_off}</strong></td>
+            Total Net Value
 
-              </tr>
+          </span>
 
-            </tbody>
+          <span>
 
-          </table>
+            ₹ {Number(printData.total_net_value).toFixed(2)}
+
+          </span>
 
         </div>
 
-        <div className="charges-box">
+        {/* ================= CHARGES ================= */}
 
-          <h3>Total Charges</h3>
+        <h2 className="charges-title">
 
-          <table className="charges-table">
+          Charges
 
-            <tbody>
+        </h2>
 
-              <tr><td>Commission</td><td>{printData.commission}</td></tr>
+        <table className="charges-table">
 
-              <tr><td>Expense</td><td>{printData.expense}</td></tr>
+          <tbody>
 
-              <tr><td>Yard Charges</td><td>{printData.yard_charges}</td></tr>
+            <tr>
 
-              <tr><td>Machu</td><td>{printData.machu}</td></tr>
+              <td>Commission</td>
 
-              <tr><td>Nettu Cooli</td><td>{printData.nettu_cooli}</td></tr>
+              <td>{printData.commission}</td>
 
-              <tr><td>Freight</td><td>{printData.freight}</td></tr>
+            </tr>
 
-              <tr><td>Kata Cooli</td><td>{printData.kata_cooli}</td></tr>
+            <tr>
 
-              <tr><td>Tolakam</td><td>{printData.tolakam}</td></tr>
+              <td>Expense</td>
 
-              <tr><td>Rasi Cooli</td><td>{printData.rasi_cooli}</td></tr>
+              <td>{printData.expense}</td>
 
-              <tr><td>Cash Advance</td><td>{printData.cash_advance}</td></tr>
+            </tr>
 
-              <tr><td>Loan Amount</td><td>{printData.loan_amount}</td></tr>
+            <tr>
 
-              <tr><td>Interest</td><td>{printData.interest}</td></tr>
+              <td>Yard Charges</td>
 
-            </tbody>
+              <td>{printData.yard_charges}</td>
 
-          </table>
+            </tr>
+
+            <tr>
+
+              <td>Machu</td>
+
+              <td>{printData.machu}</td>
+
+            </tr>
+
+            <tr>
+
+              <td>Nettu Cooli</td>
+
+              <td>{printData.nettu_cooli}</td>
+
+            </tr>
+
+            <tr>
+
+              <td>Freight</td>
+
+              <td>{printData.freight}</td>
+
+            </tr>
+
+            <tr>
+
+              <td>Kata Cooli</td>
+
+              <td>{printData.kata_cooli}</td>
+
+            </tr>
+
+            <tr>
+
+              <td>Tolakam</td>
+
+              <td>{printData.tolakam}</td>
+
+            </tr>
+
+            <tr>
+
+              <td>Rasi Cooli</td>
+
+              <td>{printData.rasi_cooli}</td>
+
+            </tr>
+
+            <tr>
+
+              <td>Cash Advance</td>
+
+              <td>
+
+                ₹ {Number(printData.cash_advance).toFixed(2)}
+
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td>Loan Amount</td>
+
+              <td>
+
+                ₹ {Number(printData.loan_amount).toFixed(2)}
+
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td>Interest</td>
+
+              <td>
+
+                ₹ {Number(printData.interest).toFixed(2)}
+
+              </td>
+
+            </tr>
+
+            <tr className="charges-total">
+
+              <td>
+
+                <strong>Total Charges</strong>
+
+              </td>
+
+              <td>
+
+                <strong>
+
+                  ₹ {Number(printData.total_charges).toFixed(2)}
+
+                </strong>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+        {/* ================= PAYABLE ================= */}
+
+        <div className="amount-payable">
+
+          <span>
+
+            Amount Payable
+
+          </span>
+
+          <span>
+
+            ₹ {Number(printData.rounding_off).toFixed(2)}
+
+          </span>
 
         </div>
+
+        {/* ================= SIGNATURES ================= */}
+
+        <div className="signatures">
+
+          <div>
+
+            ______________________
+
+            <br />
+
+            Farmer Signature
+
+          </div>
+
+          <div>
+
+            ______________________
+
+            <br />
+
+            Authorized Signature
+
+          </div>
+
+        </div>
+
+        {/* ================= BACK ================= */}
+
+        <button
+
+          className="back-btn"
+
+          onClick={() =>
+            setPage("farmerspattientry")
+          }
+
+        >
+
+          Back
+
+        </button>
 
       </div>
 
-      {/* ================= SIGNATURES ================= */}
+    );
 
-      <div className="signatures">
+  }
 
-        <div>
-
-          ______________________
-
-          <br />
-
-          Farmer Signature
-
-        </div>
-
-        <div>
-
-          ______________________
-
-          <br />
-
-          Authorized Signature
-
-        </div>
-
-      </div>
-
-      <button
-        className="back-btn"
-        onClick={() => setPage("farmerspattientry")}
-      >
-        Back
-      </button>
-
-    </div>
-
-  );
-
-});
+);
 
 export default FarmersPattiPrint;

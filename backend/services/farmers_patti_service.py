@@ -115,15 +115,23 @@ def create_farmers_patti(
 
 # ================= SEARCH FARMER =================
 
+# ================= SEARCH FARMER =================
+
 def search_farmers_patti(
     db: Session,
     farmer_name: str,
     patti_date
 ):
 
-    farmer = (
+    pattis = (
 
-        db.query(FarmersPatti)
+        db.query(
+
+            FarmersPatti.serial_no,
+            FarmersPatti.book_no,
+            FarmersPatti.patti_date
+
+        )
 
         .filter(
 
@@ -132,18 +140,78 @@ def search_farmers_patti(
 
         )
 
-        .first()
+        .distinct()
+
+        .order_by(
+
+            FarmersPatti.serial_no
+
+        )
+
+        .all()
 
     )
 
-    if not farmer:
+    if not pattis:
 
         raise HTTPException(
             status_code=404,
             detail="Farmer Patti Not Found"
         )
 
-    return farmer
+    return [
+
+        {
+
+            "serial_no": row.serial_no,
+            "book_no": row.book_no,
+            "patti_date": row.patti_date
+
+        }
+
+        for row in pattis
+
+    ]
+    
+    
+    
+    # ================= GET ONE SAVED PATTI =================
+
+def get_saved_patti(
+    db: Session,
+    farmer_name: str,
+    patti_date,
+    serial_no,
+    book_no
+):
+
+    records = (
+
+        db.query(FarmersPatti)
+
+        .filter(
+
+            FarmersPatti.farmer_name == farmer_name,
+            FarmersPatti.patti_date == patti_date,
+            FarmersPatti.serial_no == serial_no,
+            FarmersPatti.book_no == book_no
+
+        )
+
+        .order_by(FarmersPatti.id)
+
+        .all()
+
+    )
+
+    if not records:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Patti Not Found"
+        )
+
+    return records
 # ================= GET ALL =================
 
 def get_all_farmers_patti(
@@ -239,6 +307,8 @@ def get_saved_farmers(
 
 
 
+# ================= PRINT FARMER PATTI =================
+
 def get_farmers_patti_print(
     db: Session,
     farmer_name: str,
@@ -251,6 +321,7 @@ def get_farmers_patti_print(
             FarmersPatti.farmer_name == farmer_name,
             FarmersPatti.patti_date == patti_date
         )
+        .order_by(FarmersPatti.id)
         .all()
     )
 
@@ -266,6 +337,22 @@ def get_farmers_patti_print(
 
     total_net_value = 0
 
+    commission = 0
+    expense = 0
+    yard_charges = 0
+    machu = 0
+    nettu_cooli = 0
+    freight = 0
+    kata_cooli = 0
+    tolakam = 0
+    rasi_cooli = 0
+
+    cash_advance = 0
+    loan_amount = 0
+    interest = 0
+
+    total_charges = 0
+
     for record in records:
 
         items.append({
@@ -275,11 +362,65 @@ def get_farmers_patti_print(
             "bags": record.bags,
             "net_weight": record.net_weight,
             "rate": record.rate_per_qtl,
+            "gross_amount": record.gross_amount,
             "net_value": record.net_value
 
         })
 
         total_net_value += float(record.net_value or 0)
+
+        # ================= CALCULATED CHARGES =================
+
+        commission += (
+            (record.net_value or 0) *
+            (record.commission or 0) / 100
+        )
+
+        expense += (
+            (record.bags or 0) *
+            (record.expense or 0)
+        )
+
+        yard_charges += (
+            (record.bags or 0) *
+            (record.yard_charges or 0)
+        )
+
+        machu += (
+            (record.bags or 0) *
+            (record.machu or 0)
+        )
+
+        nettu_cooli += (
+            (record.bags or 0) *
+            (record.nettu_cooli or 0)
+        )
+
+        freight += (
+            (record.bags or 0) *
+            (record.freight or 0)
+        )
+
+        kata_cooli += (
+            (record.bags or 0) *
+            (record.kata_cooli or 0)
+        )
+
+        tolakam += (
+            (record.bags or 0) *
+            (record.tolakam or 0)
+        )
+
+        rasi_cooli += (
+            (record.bags or 0) *
+            (record.rasi_cooli or 0)
+        )
+
+        cash_advance += record.cash_advance or 0
+        loan_amount += record.loan_amount or 0
+        interest += record.interest or 0
+
+        total_charges += record.total_charges or 0
 
     return {
 
@@ -290,22 +431,24 @@ def get_farmers_patti_print(
 
         "items": items,
 
-        "total_net_value": total_net_value,
+        "total_net_value": round(total_net_value, 2),
 
-        "commission": first.commission,
-        "expense": first.expense,
-        "yard_charges": first.yard_charges,
-        "machu": first.machu,
-        "nettu_cooli": first.nettu_cooli,
-        "freight": first.freight,
-        "kata_cooli": first.kata_cooli,
-        "tolakam": first.tolakam,
-        "rasi_cooli": first.rasi_cooli,
-        "cash_advance": first.cash_advance,
-        "loan_amount": first.loan_amount,
-        "interest": first.interest,
+        "commission": round(commission, 2),
+        "expense": round(expense, 2),
+        "yard_charges": round(yard_charges, 2),
+        "machu": round(machu, 2),
+        "nettu_cooli": round(nettu_cooli, 2),
+        "freight": round(freight, 2),
+        "kata_cooli": round(kata_cooli, 2),
+        "tolakam": round(tolakam, 2),
+        "rasi_cooli": round(rasi_cooli, 2),
 
-        "total_charges": first.total_charges,
+        "cash_advance": round(cash_advance, 2),
+        "loan_amount": round(loan_amount, 2),
+        "interest": round(interest, 2),
+
+        "total_charges": round(total_charges, 2),
+
         "total_bill": first.total_bill,
         "rounding_off": first.rounding_off
 

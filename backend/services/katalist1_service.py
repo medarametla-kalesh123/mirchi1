@@ -458,3 +458,5 @@ def get_recent_entries(db: Session):
         .limit(30)
         .all()
     )
+    
+    
