@@ -334,6 +334,7 @@ def get_farmers_patti_print(
     first = records[0]
 
     items = []
+    bill_nos = []
 
     gross_amount = 0
     cost_of_bags = 0
@@ -355,7 +356,10 @@ def get_farmers_patti_print(
 
     for record in records:
 
+        bill_nos.append(f"{record.serial_no}/{record.book_no}")
+
         items.append({
+            "bill_no": f"{record.serial_no}/{record.book_no}",
             "item_name": record.item_name,
             "boras": record.boras,
             "bags": record.bags,
@@ -370,28 +374,23 @@ def get_farmers_patti_print(
         total_net_value += float(record.net_value or 0)
         total_bags += int(record.bags or 0)
 
-        commission += float(record.net_value or 0) * float(record.commission or 0) / 100
+        commission += (
+            float(record.net_value or 0)
+            * float(record.commission or 0)
+            / 100
+        )
 
         expense += float(record.bags or 0) * float(record.expense or 0)
-
         yard_charges += float(record.bags or 0) * float(record.yard_charges or 0)
-
         machu += float(record.bags or 0) * float(record.machu or 0)
-
         nettu_cooli += float(record.bags or 0) * float(record.nettu_cooli or 0)
-
         freight += float(record.bags or 0) * float(record.freight or 0)
-
         kata_cooli += float(record.bags or 0) * float(record.kata_cooli or 0)
-
         tolakam += float(record.bags or 0) * float(record.tolakam or 0)
-
         rasi_cooli += float(record.bags or 0) * float(record.rasi_cooli or 0)
 
         cash_advance += float(record.cash_advance or 0)
-
         loan_amount += float(record.loan_amount or 0)
-
         interest += float(record.interest or 0)
 
     cost_per_bag = (
@@ -420,7 +419,10 @@ def get_farmers_patti_print(
 
         "farmer_name": first.farmer_name,
         "address": first.address,
-        "bill_no": f"{first.serial_no}/{first.book_no}",
+
+        # All Bill Numbers
+        "bill_no": ", ".join(bill_nos),
+
         "date": first.patti_date,
 
         "items": items,

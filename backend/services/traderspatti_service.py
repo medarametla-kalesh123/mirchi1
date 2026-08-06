@@ -425,14 +425,21 @@ def get_traders_patti_print(
 
     for record in records:
 
+        bill_no = f"{record.serial_no}/{record.book_no}"
+
+        if bill_no not in bill_numbers:
+            bill_numbers.append(bill_no)
+
         items.append({
 
+            "bill_no": bill_no,
             "item_name": record.item_name,
             "boras": record.boras,
             "bags": record.bags,
             "net_weight": record.net_weight,
             "rate": record.rate_per_qtl,
             "gross_amount": record.gross_amount,
+            "market_fee": record.market_fee,
             "net_value": record.net_value
 
         })
@@ -443,15 +450,10 @@ def get_traders_patti_print(
         total_net_value += float(record.net_value or 0)
         total_bags += int(record.bags or 0)
 
-        bill_no = f"{record.serial_no}/{record.book_no}"
-
-        if bill_no not in bill_numbers:
-            bill_numbers.append(bill_no)
-
-    cost_per_bag = 0
-
-    if total_bags > 0:
-        cost_per_bag = total_cost_of_bags / total_bags
+    cost_per_bag = (
+        total_cost_of_bags / total_bags
+        if total_bags > 0 else 0
+    )
 
     return {
 
@@ -460,6 +462,8 @@ def get_traders_patti_print(
         "address": first.address,
 
         "bill_no": ", ".join(bill_numbers),
+
+        "bill_nos": bill_numbers,
 
         "date": first.patti_date,
 
