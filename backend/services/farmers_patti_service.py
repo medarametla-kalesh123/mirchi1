@@ -338,6 +338,7 @@ def get_farmers_patti_print(
     gross_amount = 0
     cost_of_bags = 0
     total_net_value = 0
+    total_bags = 0
 
     commission = 0
     expense = 0
@@ -348,19 +349,13 @@ def get_farmers_patti_print(
     kata_cooli = 0
     tolakam = 0
     rasi_cooli = 0
-
     cash_advance = 0
     loan_amount = 0
     interest = 0
 
-    total_charges = 0
-
-    total_bags = 0
-
     for record in records:
 
         items.append({
-
             "item_name": record.item_name,
             "boras": record.boras,
             "bags": record.bags,
@@ -368,132 +363,88 @@ def get_farmers_patti_print(
             "rate": record.rate_per_qtl,
             "gross_amount": record.gross_amount,
             "net_value": record.net_value
-
         })
 
         gross_amount += float(record.gross_amount or 0)
-
         cost_of_bags += float(record.cost_of_bags or 0)
-
         total_net_value += float(record.net_value or 0)
+        total_bags += int(record.bags or 0)
 
-        total_bags += record.bags or 0
+        commission += float(record.net_value or 0) * float(record.commission or 0) / 100
 
-        # ================= CALCULATED CHARGES =================
+        expense += float(record.bags or 0) * float(record.expense or 0)
 
-        commission += (
-            (record.net_value or 0) *
-            (record.commission or 0) / 100
-        )
+        yard_charges += float(record.bags or 0) * float(record.yard_charges or 0)
 
-        expense += (
-            (record.bags or 0) *
-            (record.expense or 0)
-        )
+        machu += float(record.bags or 0) * float(record.machu or 0)
 
-        yard_charges += (
-            (record.bags or 0) *
-            (record.yard_charges or 0)
-        )
+        nettu_cooli += float(record.bags or 0) * float(record.nettu_cooli or 0)
 
-        machu += (
-            (record.bags or 0) *
-            (record.machu or 0)
-        )
+        freight += float(record.bags or 0) * float(record.freight or 0)
 
-        nettu_cooli += (
-            (record.bags or 0) *
-            (record.nettu_cooli or 0)
-        )
+        kata_cooli += float(record.bags or 0) * float(record.kata_cooli or 0)
 
-        freight += (
-            (record.bags or 0) *
-            (record.freight or 0)
-        )
+        tolakam += float(record.bags or 0) * float(record.tolakam or 0)
 
-        kata_cooli += (
-            (record.bags or 0) *
-            (record.kata_cooli or 0)
-        )
+        rasi_cooli += float(record.bags or 0) * float(record.rasi_cooli or 0)
 
-        tolakam += (
-            (record.bags or 0) *
-            (record.tolakam or 0)
-        )
+        cash_advance += float(record.cash_advance or 0)
 
-        rasi_cooli += (
-            (record.bags or 0) *
-            (record.rasi_cooli or 0)
-        )
+        loan_amount += float(record.loan_amount or 0)
 
-        cash_advance += record.cash_advance or 0
+        interest += float(record.interest or 0)
 
-        loan_amount += record.loan_amount or 0
+    cost_per_bag = (
+        cost_of_bags / total_bags
+        if total_bags > 0 else 0
+    )
 
-        interest += record.interest or 0
+    total_charges = (
+        commission
+        + expense
+        + yard_charges
+        + machu
+        + nettu_cooli
+        + freight
+        + kata_cooli
+        + tolakam
+        + rasi_cooli
+        + cash_advance
+        + loan_amount
+        + interest
+    )
 
-        total_charges += record.total_charges or 0
-
-    # Cost per bag
-    cost_per_bag = 0
-
-    if total_bags > 0:
-        cost_per_bag = cost_of_bags / total_bags
+    amount_payable = total_net_value - total_charges
 
     return {
 
         "farmer_name": first.farmer_name,
-
         "address": first.address,
-
         "bill_no": f"{first.serial_no}/{first.book_no}",
-
         "date": first.patti_date,
 
         "items": items,
 
-        # ================= SUMMARY =================
-
         "gross_amount": round(gross_amount, 2),
-
         "cost_of_bags": round(cost_of_bags, 2),
-
         "cost_per_bag": round(cost_per_bag, 2),
-
         "total_net_value": round(total_net_value, 2),
 
-        # ================= CHARGES =================
-
         "commission": round(commission, 2),
-
         "expense": round(expense, 2),
-
         "yard_charges": round(yard_charges, 2),
-
         "machu": round(machu, 2),
-
         "nettu_cooli": round(nettu_cooli, 2),
-
         "freight": round(freight, 2),
-
         "kata_cooli": round(kata_cooli, 2),
-
         "tolakam": round(tolakam, 2),
-
         "rasi_cooli": round(rasi_cooli, 2),
-
         "cash_advance": round(cash_advance, 2),
-
         "loan_amount": round(loan_amount, 2),
-
         "interest": round(interest, 2),
 
         "total_charges": round(total_charges, 2),
 
-        # ================= FINAL =================
-
-        "total_bill": round(first.total_bill, 2),
-
-        "rounding_off": round(first.rounding_off, 2)
-
+        "total_bill": round(amount_payable, 2),
+        "rounding_off": round(amount_payable)
     }
