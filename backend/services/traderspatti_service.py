@@ -385,7 +385,7 @@ def delete_traders_patti(
     
     # ================= PRINT TRADERS PATTI =================
 
-def get_traders_patti_print(
+def get_traders_patti_print_all(
     db: Session,
     trader_name: str,
     patti_date
@@ -479,4 +479,145 @@ def get_traders_patti_print(
 
         "total_net_value": round(total_net_value, 2)
 
+    }
+    # ================= PRINT CURRENT TRADER PATTI =================
+
+def get_traders_patti_print_single(
+    db: Session,
+    trader_name: str,
+    patti_date,
+    serial_no: str,
+    book_no: str
+):
+
+    records = (
+        db.query(TradersPatti)
+        .filter(
+            TradersPatti.trader_name == trader_name,
+            TradersPatti.patti_date == patti_date,
+            TradersPatti.serial_no == serial_no,
+            TradersPatti.book_no == book_no
+        )
+        .order_by(
+            TradersPatti.id
+        )
+        .all()
+    )
+
+    if not records:
+        raise HTTPException(
+            status_code=404,
+            detail="Trader Patti Not Found"
+        )
+
+    first = records[0]
+
+    items = []
+
+    total_gross_amount = 0
+    total_cost_of_bags = 0
+    total_market_fee = 0
+    total_net_value = 0
+    total_bags = 0
+
+    # ================= BILL NUMBER =================
+
+    bill_no = f"{first.serial_no}/{first.book_no}"
+
+    # ================= ITEMS =================
+
+    for record in records:
+
+        items.append({
+
+            "bill_no": bill_no,
+
+            "item_name": record.item_name,
+
+            "boras": record.boras,
+
+            "bags": record.bags,
+
+            "net_weight": record.net_weight,
+
+            "rate": record.rate_per_qtl,
+
+            "gross_amount": record.gross_amount,
+
+            "market_fee": record.market_fee,
+
+            "net_value": record.net_value
+
+        })
+
+        # ================= TOTALS =================
+
+        total_gross_amount += float(
+            record.gross_amount or 0
+        )
+
+        total_cost_of_bags += float(
+            record.cost_of_bags or 0
+        )
+
+        total_market_fee += float(
+            record.market_fee or 0
+        )
+
+        total_net_value += float(
+            record.net_value or 0
+        )
+
+        total_bags += int(
+            record.bags or 0
+        )
+
+    # ================= COST PER BAG =================
+
+    cost_per_bag = (
+        total_cost_of_bags / total_bags
+        if total_bags > 0
+        else 0
+    )
+
+    # ================= RETURN =================
+
+    return {
+
+        "trader_name": first.trader_name,
+
+        "address": first.address,
+
+        "bill_no": bill_no,
+
+        "bill_nos": [bill_no],
+
+        "date": first.patti_date,
+
+        "items": items,
+
+        "gross_amount": round(
+            total_gross_amount,
+            2
+        ),
+
+        "cost_of_bags": round(
+            total_cost_of_bags,
+            2
+        ),
+
+        "cost_per_bag": round(
+            cost_per_bag,
+            2
+        ),
+
+        "market_fee": round(
+            total_market_fee,
+            2
+        ),
+
+        "total_net_value": round(
+            total_net_value,
+            2
+        )
     }

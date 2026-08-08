@@ -1,197 +1,570 @@
-/* ================= SCREEN ================= */
+/* =========================================================
+   TRADERS PATTI PRINT CONTAINER
+   ========================================================= */
 
-.print-container {
-    width: 900px;
-    margin: 20px auto;
-    padding: 30px;
-    background: #fff;
-    color: #000;
-    font-family: Arial, Helvetica, sans-serif;
-    box-sizing: border-box;
+.traders-print-container {
+
+  width: 190mm;
+
+  min-height: 277mm;
+
+  margin: 0 auto;
+
+  padding: 6mm;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  color: #000000;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 11px;
 }
 
-.title {
-    text-align: center;
-    font-size: 30px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    margin-bottom: 25px;
-    border-bottom: 2px solid #000;
-    padding-bottom: 10px;
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.traders-print-title {
+
+  text-align: center;
+
+  font-size: 21px;
+
+  font-weight: bold;
+
+  letter-spacing: 0.5px;
+
+  margin: 0 0 8px 0;
+
+  padding: 0 0 6px 0;
+
+  border-bottom: 2px solid #000000;
 }
 
-/* ================= HEADER ================= */
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.traders-print-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  width: 100%;
+
+  margin-bottom: 8px;
+
+  line-height: 1.45;
 }
 
-.header-left,
-.header-right {
-    width: 48%;
+
+.traders-print-header-left {
+
+  width: 48%;
+
+  text-align: left;
 }
 
-.header p {
-    margin: 6px 0;
-    font-size: 16px;
+
+.traders-print-header-right {
+
+  width: 48%;
+
+  text-align: left;
 }
 
-/* ================= ITEMS TABLE ================= */
 
-.items-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+.traders-print-header-left div,
+.traders-print-header-right div {
+
+  margin: 1px 0;
+
+  font-size: 10px;
 }
 
-.items-table th {
-    border: 1px solid #000;
-    padding: 8px;
-    background: #f2f2f2;
-    font-size: 15px;
+
+.traders-print-header strong {
+
+  font-weight: bold;
 }
 
-.items-table td {
-    border: 1px solid #000;
-    padding: 8px;
-    text-align: center;
-    font-size: 14px;
+
+/* =========================================================
+   ITEMS TABLE
+   ========================================================= */
+
+.traders-print-items-table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  table-layout: fixed;
+
+  margin: 0 0 8px 0;
 }
 
-/* ================= SUMMARY ================= */
 
-.summary-box {
-    border: 2px solid #000;
-    margin-bottom: 20px;
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.traders-print-items-table th {
+
+  border: 1px solid #000000;
+
+  padding: 4px 3px;
+
+  text-align: center;
+
+  vertical-align: middle;
+
+  font-size: 9px;
+
+  font-weight: bold;
+
+  line-height: 1.1;
+
+  background: #ffffff;
 }
 
-.summary-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 15px;
-    font-size: 17px;
-    border-bottom: 1px solid #000;
+
+/* =========================================================
+   TABLE DATA
+   ========================================================= */
+
+.traders-print-items-table td {
+
+  border: 1px solid #000000;
+
+  padding: 5px 3px;
+
+  text-align: center;
+
+  vertical-align: middle;
+
+  font-size: 9px;
+
+  line-height: 1.15;
 }
 
-.summary-row:last-child {
-    border-bottom: none;
+
+/* =========================================================
+   ITEM NAME
+   ========================================================= */
+
+.traders-print-items-table td.item-name {
+
+  text-align: left;
+
+  padding-left: 5px;
 }
 
-/* ================= TOTAL NET VALUE ================= */
 
-.net-value {
-    display: flex;
-    justify-content: space-between;
-    font-size: 20px;
-    font-weight: bold;
-    border: 3px solid #000;
-    padding: 12px 15px;
-    margin-bottom: 30px;
+/* =========================================================
+   COLUMN WIDTHS
+   ========================================================= */
+
+/* S.No */
+
+.traders-print-items-table th:nth-child(1),
+.traders-print-items-table td:nth-child(1) {
+
+  width: 7%;
 }
 
-/* ================= SIGNATURES ================= */
 
-.signatures {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 70px;
-    text-align: center;
-    font-weight: bold;
+/* Item */
+
+.traders-print-items-table th:nth-child(2),
+.traders-print-items-table td:nth-child(2) {
+
+  width: 19%;
 }
 
-.signatures div {
-    width: 250px;
+
+/* Boras */
+
+.traders-print-items-table th:nth-child(3),
+.traders-print-items-table td:nth-child(3) {
+
+  width: 8%;
 }
 
-/* ================= BUTTON ================= */
 
-.back-btn {
-    display: block;
-    margin: 40px auto 0;
-    padding: 10px 30px;
-    cursor: pointer;
-    font-size: 15px;
+/* Bags */
+
+.traders-print-items-table th:nth-child(4),
+.traders-print-items-table td:nth-child(4) {
+
+  width: 8%;
 }
 
-/* ================= PRINT ================= */
+
+/* Net Weight */
+
+.traders-print-items-table th:nth-child(5),
+.traders-print-items-table td:nth-child(5) {
+
+  width: 13%;
+}
+
+
+/* Rate */
+
+.traders-print-items-table th:nth-child(6),
+.traders-print-items-table td:nth-child(6) {
+
+  width: 14%;
+}
+
+
+/* Gross Amount */
+
+.traders-print-items-table th:nth-child(7),
+.traders-print-items-table td:nth-child(7) {
+
+  width: 15%;
+}
+
+
+/* Net Value */
+
+.traders-print-items-table th:nth-child(8),
+.traders-print-items-table td:nth-child(8) {
+
+  width: 16%;
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.traders-print-summary {
+
+  width: 100%;
+
+  border: 1px solid #000000;
+
+  margin-top: 0;
+
+  margin-bottom: 8px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SUMMARY ROW
+   ========================================================= */
+
+.traders-print-summary-row {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  min-height: 25px;
+
+  box-sizing: border-box;
+
+  padding: 5px 8px;
+
+  border-bottom: 1px solid #000000;
+
+  font-size: 10px;
+}
+
+
+.traders-print-summary-row:last-child {
+
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   SUMMARY LEFT
+   ========================================================= */
+
+.traders-print-summary-row span:first-child {
+
+  font-weight: bold;
+
+  text-align: left;
+}
+
+
+/* =========================================================
+   SUMMARY RIGHT
+   ========================================================= */
+
+.traders-print-summary-row span:last-child {
+
+  text-align: right;
+
+  font-weight: bold;
+}
+
+
+/* =========================================================
+   TOTAL NET VALUE
+   ========================================================= */
+
+.traders-print-net-value {
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 7px 9px;
+
+  border: 2px solid #000000;
+
+  margin-top: 7px;
+
+  font-size: 14px;
+
+  font-weight: bold;
+}
+
+
+/* =========================================================
+   SIGNATURES
+   ========================================================= */
+
+.traders-print-signatures {
+
+  width: 100%;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 38px;
+
+  font-size: 10px;
+
+  font-weight: bold;
+
+  text-align: center;
+}
+
+
+.traders-print-signature {
+
+  width: 40%;
+}
+
+
+/* =========================================================
+   SIGNATURE LINE
+   ========================================================= */
+
+.traders-print-signature-line {
+
+  width: 35mm;
+
+  margin: 0 auto 5px auto;
+
+  border-top: 1px solid #000000;
+
+  height: 1px;
+}
+
+
+/* =========================================================
+   SCREEN
+   ========================================================= */
+
+@media screen {
+
+  .traders-print-container {
+
+    background: #ffffff;
+
+    box-shadow:
+      0 0 5px rgba(0, 0, 0, 0.15);
+  }
+
+}
+
+
+/* =========================================================
+   A4 PRINT
+   ========================================================= */
 
 @page {
-    size: A4 portrait;
-    margin: 10mm;
+
+  size: A4 portrait;
+
+  margin: 8mm;
 }
+
 
 @media print {
 
-    html,
-    body {
-        width: 210mm;
-        height: 297mm;
-        margin: 0;
-        padding: 0;
-        background: white;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
+  html,
+  body {
 
-    body * {
-        visibility: hidden;
-    }
+    width: 210mm;
 
-    .print-container,
-    .print-container * {
-        visibility: visible;
-    }
+    min-height: 297mm;
 
-    .print-container {
-        position: absolute;
-        left: 0;
-        top: 0;
+    margin: 0;
 
-        width: 190mm;
-        min-height: 277mm;
+    padding: 0;
 
-        margin: 0;
-        padding: 6mm;
+    background: #ffffff;
 
-        background: white;
-        box-sizing: border-box;
-    }
+    -webkit-print-color-adjust: exact;
 
-    .title {
-        font-size: 22px;
-        margin-bottom: 15px;
-        padding-bottom: 6px;
-    }
+    print-color-adjust: exact;
+  }
 
-    .header p {
-        font-size: 12px;
-    }
 
-    .items-table th,
-    .items-table td {
-        font-size: 10px;
-        padding: 5px;
-    }
+  /* Hide everything except print component */
 
-    .summary-row {
-        font-size: 11px;
-        padding: 6px 10px;
-    }
+  body * {
 
-    .net-value {
-        font-size: 14px;
-        padding: 8px 10px;
-        margin-bottom: 20px;
-    }
+    visibility: hidden;
+  }
 
-    .signatures {
-        margin-top: 45px;
-        font-size: 11px;
-    }
 
-    .back-btn {
-        display: none;
-    }
+  .traders-print-container,
+  .traders-print-container * {
+
+    visibility: visible;
+  }
+
+
+  .traders-print-container {
+
+    position: absolute;
+
+    left: 0;
+
+    top: 0;
+
+    width: 190mm;
+
+    min-height: 277mm;
+
+    margin: 0;
+
+    padding: 6mm;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+  }
+
+
+  /* TITLE */
+
+  .traders-print-title {
+
+    font-size: 21px;
+
+    margin-bottom: 8px;
+
+    padding-bottom: 6px;
+  }
+
+
+  /* HEADER */
+
+  .traders-print-header {
+
+    margin-bottom: 8px;
+  }
+
+
+  .traders-print-header-left div,
+  .traders-print-header-right div {
+
+    font-size: 10px;
+  }
+
+
+  /* TABLE */
+
+  .traders-print-items-table {
+
+    margin-bottom: 8px;
+  }
+
+
+  .traders-print-items-table th {
+
+    font-size: 9px;
+
+    padding: 4px 3px;
+  }
+
+
+  .traders-print-items-table td {
+
+    font-size: 9px;
+
+    padding: 5px 3px;
+  }
+
+
+  /* SUMMARY */
+
+  .traders-print-summary {
+
+    margin-bottom: 8px;
+  }
+
+
+  .traders-print-summary-row {
+
+    min-height: 25px;
+
+    padding: 5px 8px;
+
+    font-size: 10px;
+  }
+
+
+  /* TOTAL */
+
+  .traders-print-net-value {
+
+    font-size: 14px;
+
+    padding: 7px 9px;
+  }
+
+
+  /* SIGNATURE */
+
+  .traders-print-signatures {
+
+    margin-top: 38px;
+
+    font-size: 10px;
+  }
+
 }

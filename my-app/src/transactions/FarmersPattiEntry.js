@@ -83,40 +83,176 @@ const handleReactPrint = useReactToPrint({
   };
 
 
+// ================= GET TODAY DATE =================
 
+const getTodayDate = () => {
+
+  const today = new Date();
+
+  const year = today.getFullYear();
+
+  const month = String(
+    today.getMonth() + 1
+  ).padStart(2, "0");
+
+  const day = String(
+    today.getDate()
+  ).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
  // ================= LOAD FARMER DETAILS =================
 
-const loadFarmerDetails = async (
-  farmerName,
-  entryDate
-) => {
+// ================= LOAD FARMER DETAILS =================
+
+// ================= LOAD FARMER DETAILS =================
+
+// ================= LOAD FARMER DETAILS =================
+
+// ================= LOAD FARMER DETAILS =================
+
+const loadFarmerDetails = async (farmerName) => {
 
   try {
 
-    const response = await fetch(
+    if (!farmerName) {
 
+      setPendingItems([]);
+      setCurrentItemIndex(0);
+      setItems([]);
+
+      return;
+    }
+
+
+    // ==================================================
+    // IMPORTANT:
+    // Query using TODAY so we get ALL pending items
+    // from previous dates up to today.
+    // ==================================================
+
+    const today = getTodayDate();
+
+
+    const response = await fetch(
       `${API}/katalist1/farmer/${encodeURIComponent(
         farmerName
-      )}?entry_date=${entryDate}`
-
+      )}?entry_date=${today}`
     );
 
-   const data = await response.json();
 
-console.log("Items Loaded:", data);
+    if (!response.ok) {
 
-setPendingItems(data);
-setCurrentItemIndex(0);
+      const errorData = await response.text();
 
-if (data.length > 0) {
-    setItems([data[0]]);
-} else {
-    setItems([]);
-}
+      console.log(
+        "Farmer API Error:",
+        response.status,
+        errorData
+      );
 
-  } catch (error) {
+      setPendingItems([]);
+      setCurrentItemIndex(0);
+      setItems([]);
 
-    console.log(error);
+      return;
+    }
+
+
+    const data = await response.json();
+
+
+    console.log(
+      "ALL Pending Items Upto Today:",
+      data
+    );
+
+
+    if (data.length > 0) {
+
+      // ==============================================
+      // KEEP ALL ITEMS
+      // ==============================================
+
+      setPendingItems(data);
+
+      setCurrentItemIndex(0);
+
+
+      // ==============================================
+      // SHOW FIRST PENDING ITEM
+      // ==============================================
+
+      const firstItem = data[0];
+
+
+      setItems([
+        firstItem
+      ]);
+
+
+      // ==============================================
+      // IMPORTANT:
+      // DATE SHOULD BE FIRST ITEM'S DATE
+      // NOT TODAY
+      // ==============================================
+
+      setFormData(prev => ({
+
+        ...prev,
+
+        farmer_name: farmerName,
+
+        patti_date:
+          firstItem.entry_date || today,
+
+        period_from:
+          firstItem.entry_date || today,
+
+        period_to:
+          firstItem.entry_date || today
+
+      }));
+
+    }
+    else {
+
+      setPendingItems([]);
+
+      setCurrentItemIndex(0);
+
+      setItems([]);
+
+
+      // No pending items -> today
+
+      setFormData(prev => ({
+
+        ...prev,
+
+        farmer_name: farmerName,
+
+        patti_date: today,
+
+        period_from: today,
+
+        period_to: today
+
+      }));
+
+    }
+
+  }
+  catch (error) {
+
+    console.error(
+      "Error loading farmer details:",
+      error
+    );
+
+    setPendingItems([]);
+
+    setCurrentItemIndex(0);
 
     setItems([]);
 
@@ -127,12 +263,38 @@ const showCurrentItem = (index) => {
 
   if (index < 0 || index >= pendingItems.length) return;
 
+
+  const selectedItem = pendingItems[index];
+
+
   setCurrentItemIndex(index);
 
-  setItems([pendingItems[index]]);
+
+  setItems([
+    selectedItem
+  ]);
+
+
+  // Only update date based on item
+  setFormData(prev => ({
+
+    ...prev,
+
+    patti_date:
+      selectedItem.entry_date || prev.patti_date,
+
+
+    // Keep same S.No and Book No
+    serial_no:
+      prev.serial_no,
+
+
+    book_no:
+      prev.book_no
+
+  }));
 
 };
-
 const handlePrevious = async () => {
 
   // ================= RETRIEVE SAVED PATTI =================
@@ -317,9 +479,27 @@ const loadSavedFarmers = async (selectedDate) => {
 
   try {
 
+    if (!selectedDate) {
+
+      setFarmers([]);
+
+      return;
+
+    }
+
     const response = await fetch(
-      `${API}/farmers-patti/farmers?patti_date=${selectedDate}`
+      `${API}/farmers-patti/farmers?patti_date=${encodeURIComponent(
+        selectedDate
+      )}`
     );
+
+    if (!response.ok) {
+
+      setFarmers([]);
+
+      return;
+
+    }
 
     const data = await response.json();
 
@@ -334,7 +514,6 @@ const loadSavedFarmers = async (selectedDate) => {
   }
 
 };
-
   // ================= LOAD DEFAULTS =================
 
 const loadDefaults = async () => {
@@ -378,8 +557,12 @@ const handleKataFarmerTypeChange = async (e) => {
 
   setKataFarmerType(selectedType);
 
-  // Clear previous farmer data
+  // ================= CLEAR PREVIOUS STATE =================
+
+  setPendingItems([]);
+  setCurrentItemIndex(0);
   setItems([]);
+  setFarmers([]);
 
   setFormData(prev => ({
 
@@ -388,10 +571,8 @@ const handleKataFarmerTypeChange = async (e) => {
     farmer_name: "",
     address: "",
 
-    gross_amount: 0,
-    cost_per_bag: 0,
-    market_fee: 0,
-    net_value: 0,
+    book_no: "",
+    serial_no: "",
 
     yard_advance: 0,
     advance: 0,
@@ -410,98 +591,167 @@ const handleKataFarmerTypeChange = async (e) => {
 
     cash_advance: 0,
     loan_amount: 0,
-    interest: 0
+    interest: 0,
+
+    net_value: 0,
+
+    period_from: "",
+    period_to: ""
 
   }));
+
+
+  // ================= ALL KATA FARMERS =================
 
   if (selectedType === "all") {
 
     setIsSavedPatti(false);
-     await loadDefaults(); 
 
-    loadFarmers();
+    await loadDefaults();
+
+    await loadFarmers();
 
   }
+
+
+  // ================= PEN KATA FARMERS =================
 
   else if (selectedType === "pen") {
 
     setIsSavedPatti(false);
-     await loadDefaults(); 
 
-    loadFarmers();
+    await loadDefaults();
+
+    await loadFarmers();
 
   }
+
+
+  // ================= RETRIEVE SAVED PATTI =================
 
   else if (selectedType === "saved") {
 
     setIsSavedPatti(true);
 
-    setFormData(prev => ({
-        ...prev,
-        farmer_name: "",
-        address: "",
-        book_no: "",
-        serial_no: ""
-    }));
+    // TODAY'S DATE
+    const today =
+      new Date().toISOString().split("T")[0];
 
-    setItems([]);
-
-    loadSavedFarmers(formData.patti_date);
-
-}
-  else {
-
-    setFarmers([]);
-
-  }
-
-};
-const handleDateChange = async (e) => {
-
-  const selectedDate = e.target.value;
-
-  setFormData(prev => ({
-
-    ...prev,
-
-    patti_date: selectedDate,
-    period_from: selectedDate,
-    period_to: selectedDate
-
-  }));
-
-  // If Retrieve Saved Patti is selected,
-  // reload only farmers saved on this date
-  if (isSavedPatti) {
-
-    await loadSavedFarmers(selectedDate);
-
-    // Clear currently selected farmer
+    // Set date to TODAY
     setFormData(prev => ({
 
       ...prev,
 
       farmer_name: "",
       address: "",
-      serial_no:"",
-      book_no:""
+
+      patti_date: today,
+      period_from: today,
+      period_to: today,
+
+      serial_no: "",
+      book_no: ""
 
     }));
 
+    // Clear previous Pen.Kata data
+    setPendingItems([]);
+    setCurrentItemIndex(0);
     setItems([]);
 
-    return;
+    // Load ONLY today's saved farmers
+    await loadSavedFarmers(today);
 
   }
 
-  if (!formData.farmer_name) return;
+};
+// ================= DATE CHANGE =================
+
+// ================= DATE CHANGE =================
+
+const handleDateChange = async (e) => {
+
+  const selectedDate = e.target.value;
+
+
+  // ================= RETRIEVE SAVED PATTI =================
+
+  if (isSavedPatti) {
+
+    setFormData(prev => ({
+      ...prev,
+
+      patti_date: selectedDate,
+
+      period_from: selectedDate,
+
+      period_to: selectedDate,
+
+      farmer_name: "",
+
+      address: "",
+
+      serial_no: "",
+
+      book_no: ""
+    }));
+
+
+    setItems([]);
+
+    setPendingItems([]);
+
+    setCurrentItemIndex(0);
+
+
+    await loadSavedFarmers(
+      selectedDate
+    );
+
+    return;
+  }
+
+
+  // ================= PEN / ALL KATA =================
+
+  const today = getTodayDate();
+
+
+  // Always keep today's date
+
+  setFormData(prev => ({
+    ...prev,
+
+    patti_date: today,
+
+    period_from: today,
+
+    period_to: today
+  }));
+
+
+  // No farmer selected
+
+  if (!formData.farmer_name) {
+
+    return;
+  }
+
+
+  // Reload ALL pending items up to today
 
   await loadFarmerDetails(
-    formData.farmer_name,
-    selectedDate
+    formData.farmer_name
   );
 
 };
+// ================= FARMER CHANGE =================
+
+// ================= FARMER CHANGE =================
+
+// ================= FARMER CHANGE =================
+
+// ================= FARMER CHANGE =================
 
 // ================= FARMER CHANGE =================
 
@@ -509,41 +759,78 @@ const handleFarmerChange = async (e) => {
 
   const farmerName = e.target.value;
 
-  setFormData(prev => ({
 
-    ...prev,
+  // Clear previous farmer's items
 
-    farmer_name: farmerName,
-    address: ""
+  setPendingItems([]);
 
-  }));
+  setCurrentItemIndex(0);
 
-  if (!farmerName) return;
+  setItems([]);
 
-  // Load Address
-  await loadAccountAddress(farmerName);
+
+  if (!farmerName) {
+
+    setFormData(prev => ({
+
+      ...prev,
+
+      farmer_name: "",
+
+      address: ""
+
+    }));
+
+    return;
+  }
+
 
   // ================= RETRIEVE SAVED PATTI =================
 
   if (isSavedPatti) {
+
+    setFormData(prev => ({
+
+      ...prev,
+
+      farmer_name: farmerName,
+
+      address: ""
+
+    }));
+
+
+    await loadAccountAddress(
+      farmerName
+    );
+
 
     await loadSavedPatti(
       farmerName,
       formData.patti_date
     );
 
+    return;
   }
 
-  // ================= NEW PATTI =================
 
-  else {
+  // ================= PEN / ALL KATA =================
 
-    await loadFarmerDetails(
-      farmerName,
-      formData.patti_date
-    );
+  // loadFarmerDetails will:
+  // 1. Query using TODAY
+  // 2. Get ALL pending items
+  // 3. Display first item's actual date
 
-  }
+  await loadFarmerDetails(
+    farmerName
+  );
+
+
+  // Load address
+
+  await loadAccountAddress(
+    farmerName
+  );
 
 };
 //================ LOAD SAVED PATTI =================
@@ -883,197 +1170,439 @@ const loadSavedPatti = async (farmerName, selectedDate) => {
  // ================= SAVE =================
 
 const handleSave = async () => {
+
   try {
+
     if (items.length === 0) {
+
       alert("No item details available to save");
       return;
+
     }
+
 
     const savedFarmer = formData.farmer_name;
 
-    for (const item of items) {
-      const itemBags = Number(item.bags || 0);
-      const itemNetValue = Number(item.net_value || 0);
 
-      // ================= ITEM WISE CHARGES =================
+    const currentItem = items[0];
 
-      const itemCommission =
-        itemNetValue * (Number(formData.commission || 0) / 100);
 
-      const itemExpense =
-        itemBags * Number(formData.expense || 0);
+    const itemBags = Number(currentItem.bags || 0);
 
-      const itemYardCharges =
-        itemBags * Number(formData.yard_charges || 0);
+    const itemNetValue = Number(currentItem.net_value || 0);
 
-      const itemMachu =
-        itemBags * Number(formData.machu || 0);
 
-      const itemNettuCooli =
-        itemBags * Number(formData.nettu_cooli || 0);
 
-      const itemFreight =
-        itemBags * Number(formData.freight || 0);
+    // ================= ITEM WISE CHARGES =================
 
-      const itemKataCooli =
-        itemBags * Number(formData.kata_cooli || 0);
 
-      const itemTolakam =
-        itemBags * Number(formData.tolakam || 0);
+    const itemCommission =
+      itemNetValue *
+      (Number(formData.commission || 0) / 100);
 
-      const itemRasiCooli =
-        itemBags * Number(formData.rasi_cooli || 0);
 
-      const itemCashAdvance =
-        Number(formData.cash_advance || 0) / items.length;
+    const itemExpense =
+      itemBags *
+      Number(formData.expense || 0);
 
-      const itemLoanAmount =
-        Number(formData.loan_amount || 0) / items.length;
 
-      const itemInterest =
-        Number(formData.interest || 0) / items.length;
+    const itemYardCharges =
+      itemBags *
+      Number(formData.yard_charges || 0);
 
-      const itemTotalCharges =
-        itemCommission +
-        itemExpense +
-        itemYardCharges +
-        itemMachu +
-        itemNettuCooli +
-        itemFreight +
-        itemKataCooli +
-        itemTolakam +
-        itemRasiCooli +
-        itemCashAdvance +
-        itemLoanAmount +
-        itemInterest;
 
-      const itemTotalBill =
-        itemNetValue - itemTotalCharges;
+    const itemMachu =
+      itemBags *
+      Number(formData.machu || 0);
 
-      const itemRoundingOff =
-        Math.round(itemTotalBill);
 
-      const response = await fetch(`${API}/farmers-patti/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const itemNettuCooli =
+      itemBags *
+      Number(formData.nettu_cooli || 0);
+
+
+    const itemFreight =
+      itemBags *
+      Number(formData.freight || 0);
+
+
+    const itemKataCooli =
+      itemBags *
+      Number(formData.kata_cooli || 0);
+
+
+    const itemTolakam =
+      itemBags *
+      Number(formData.tolakam || 0);
+
+
+    const itemRasiCooli =
+      itemBags *
+      Number(formData.rasi_cooli || 0);
+
+
+
+    const itemCashAdvance =
+      Number(formData.cash_advance || 0);
+
+
+    const itemLoanAmount =
+      Number(formData.loan_amount || 0);
+
+
+    const itemInterest =
+      Number(formData.interest || 0);
+
+
+
+    const itemTotalCharges =
+
+      itemCommission +
+      itemExpense +
+      itemYardCharges +
+      itemMachu +
+      itemNettuCooli +
+      itemFreight +
+      itemKataCooli +
+      itemTolakam +
+      itemRasiCooli +
+      itemCashAdvance +
+      itemLoanAmount +
+      itemInterest;
+
+
+
+    const itemTotalBill =
+      itemNetValue - itemTotalCharges;
+
+
+
+    const itemRoundingOff =
+      Math.round(itemTotalBill);
+
+
+
+    // ================= SAVE CURRENT ITEM =================
+
+
+    const response = await fetch(
+
+      `${API}/farmers-patti/`,
+
+      {
+
+        method:"POST",
+
+        headers:{
+          "Content-Type":"application/json",
         },
-        body: JSON.stringify({
-          entry_no: item.entry_no,
+
+
+        body:JSON.stringify({
+
+          entry_no: currentItem.entry_no,
+
 
           farmer_name: formData.farmer_name,
+
+
+          // SAME UNTIL SAVE
           book_no: String(formData.book_no),
-          patti_date: formData.patti_date,
+
+
           serial_no: String(formData.serial_no),
+
+
+          // ITEM OWN DATE
+          patti_date:
+          currentItem.entry_date || formData.patti_date,
+
+
           address: formData.address,
 
-          item_name: item.item_name || "",
-          bags: item.bags || 0,
-          boras: item.boras || 0,
-          net_weight: item.net_weight || 0,
-          rate_per_qtl: item.rate_per_qtl || 0,
-          gross_amount: Number(item.gross_amount || 0),
-          cost_of_bags: Number(item.cost_of_bags || 0),
-          market_fee: Number(item.market_fee || 0),
-          net_value: itemNetValue,
 
-          yard_advance: formData.yard_advance,
-          advance: formData.advance,
-          total_bill: itemTotalBill,
-          rounding_off: itemRoundingOff,
+          item_name:
+          currentItem.item_name || "",
 
-          commission: formData.commission,
-          expense: formData.expense,
-          yard_charges: formData.yard_charges,
-          machu: formData.machu,
-          nettu_cooli: formData.nettu_cooli,
-          freight: formData.freight,
-          kata_cooli: formData.kata_cooli,
-          tolakam: formData.tolakam,
-          rasi_cooli: formData.rasi_cooli,
 
-          cash_advance: itemCashAdvance,
-          loan_amount: itemLoanAmount,
-          interest: itemInterest,
+          bags:
+          currentItem.bags || 0,
 
-          total_charges: itemTotalCharges,
-        }),
+
+          boras:
+          currentItem.boras || 0,
+
+
+          net_weight:
+          currentItem.net_weight || 0,
+
+
+          rate_per_qtl:
+          currentItem.rate_per_qtl || 0,
+
+
+          gross_amount:
+          Number(currentItem.gross_amount || 0),
+
+
+          cost_of_bags:
+          Number(currentItem.cost_of_bags || 0),
+
+
+          market_fee:
+          Number(currentItem.market_fee || 0),
+
+
+          net_value:
+          itemNetValue,
+
+
+          yard_advance:
+          formData.yard_advance,
+
+
+          advance:
+          formData.advance,
+
+
+          total_bill:
+          itemTotalBill,
+
+
+          rounding_off:
+          itemRoundingOff,
+
+
+          commission:
+          formData.commission,
+
+
+          expense:
+          formData.expense,
+
+
+          yard_charges:
+          formData.yard_charges,
+
+
+          machu:
+          formData.machu,
+
+
+          nettu_cooli:
+          formData.nettu_cooli,
+
+
+          freight:
+          formData.freight,
+
+
+          kata_cooli:
+          formData.kata_cooli,
+
+
+          tolakam:
+          formData.tolakam,
+
+
+          rasi_cooli:
+          formData.rasi_cooli,
+
+
+          cash_advance:
+          itemCashAdvance,
+
+
+          loan_amount:
+          itemLoanAmount,
+
+
+          interest:
+          itemInterest,
+
+
+          total_charges:
+          itemTotalCharges
+
+
+        })
+
       });
 
-      const data = await response.json();
 
-      if (!response.ok) {
-        alert(JSON.stringify(data, null, 2));
-        return;
-      }
 
-      // ================= GET NEXT SERIAL & BOOK =================
-      await loadDefaults();
+    const data = await response.json();
+
+
+    if(!response.ok){
+
+      alert(JSON.stringify(data,null,2));
+
+      return;
+
     }
+
+
+
+    // ================= AFTER SAVE =================
+
 
     alert("Farmers Patti Saved Successfully");
 
-    const remainingItems = pendingItems.filter(
-      (_, index) => index !== currentItemIndex
-    );
+
+
+    const remainingItems =
+
+      pendingItems.filter(
+
+        (_,index)=>
+        index !== currentItemIndex
+
+      );
+
+
 
     setPendingItems(remainingItems);
 
-    if (remainingItems.length > 0) {
 
-      const nextIndex =
-        currentItemIndex >= remainingItems.length
-          ? remainingItems.length - 1
-          : currentItemIndex;
 
-      setCurrentItemIndex(nextIndex);
-      setItems([remainingItems[nextIndex]]);
+    // ================= INCREMENT ONLY AFTER SAVE =================
 
-    } else {
+
+    const nextSerial =
+      Number(formData.serial_no) + 1;
+
+
+    const nextBook =
+      Number(formData.book_no) + 1;
+
+
+
+    if(remainingItems.length > 0){
+
+
+      setCurrentItemIndex(0);
+
+
+      const nextItem = remainingItems[0];
+
+
+      setItems([nextItem]);
+
+
+
+      setFormData(prev => ({
+
+        ...prev,
+
+
+        serial_no:String(nextSerial),
+
+
+        book_no:String(nextBook),
+
+
+        // next item's date
+        patti_date:
+        nextItem.entry_date || prev.patti_date
+
+
+      }));
+
+
+    }
+
+    else {
+
+
+      // Farmer completed
+
 
       setFarmers(prev =>
-        prev.filter(name => name !== savedFarmer)
+
+        prev.filter(
+          name =>
+          name !== savedFarmer
+        )
+
       );
+
+
+      setPendingItems([]);
 
       setItems([]);
 
+
+
       setFormData(prev => ({
+
         ...prev,
 
-        farmer_name: "",
-        address: "",
 
-        yard_advance: 0,
-        advance: 0,
-        total_bill: 0,
-        rounding_off: 0,
+        farmer_name:"",
 
-        commission: 0,
-        expense: 0,
-        yard_charges: 0,
-        machu: 0,
-        nettu_cooli: 0,
-        freight: 0,
-        kata_cooli: 0,
-        tolakam: 0,
-        rasi_cooli: 0,
+        address:"",
 
-        cash_advance: 0,
-        loan_amount: 0,
-        interest: 0,
 
-        net_value: 0
+        serial_no:String(nextSerial),
+
+
+        book_no:String(nextBook),
+
+
+        yard_advance:0,
+
+        advance:0,
+
+        total_bill:0,
+
+        rounding_off:0,
+
+
+        commission:0,
+
+        expense:0,
+
+        yard_charges:0,
+
+        machu:0,
+
+        nettu_cooli:0,
+
+        freight:0,
+
+        kata_cooli:0,
+
+        tolakam:0,
+
+        rasi_cooli:0,
+
+
+        cash_advance:0,
+
+        loan_amount:0,
+
+        interest:0,
+
+
+        net_value:0
+
       }));
 
-      await loadDefaults();
     }
 
-  } catch (error) {
-    console.error(error);
-    alert("Error saving Farmers Patti");
-  }
-};
 
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    alert("Error saving Farmers Patti");
+
+  }
+
+};
 
  const handleClear = async () => {
 
@@ -1132,37 +1661,218 @@ const handleSave = async () => {
   await loadDefaults();
 
 };
-const loadPrintData = async (farmerName, pattiDate) => {
-  const response = await fetch(
-    `${API}/farmers-patti/print?farmer_name=${encodeURIComponent(farmerName)}&patti_date=${pattiDate}`
-  );
+// ================= LOAD SINGLE PATTI PRINT DATA =================
 
-  const result = await response.json();
+// ================= LOAD SINGLE PATTI PRINT DATA =================
 
-  return result;
+const loadSinglePrintData = async (
+  farmerName,
+  pattiDate,
+  serialNo,
+  bookNo
+) => {
+
+  try {
+
+    const response = await fetch(
+      `${API}/farmers-patti/print-single` +
+      `?farmer_name=${encodeURIComponent(farmerName)}` +
+      `&patti_date=${encodeURIComponent(pattiDate)}` +
+      `&serial_no=${encodeURIComponent(serialNo)}` +
+      `&book_no=${encodeURIComponent(bookNo)}`
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+
+      console.error(
+        "Single Print API Error:",
+        result
+      );
+
+      alert(
+        result.detail ||
+        "Unable to load current Patti"
+      );
+
+      return null;
+    }
+
+    return result;
+
+  } catch (error) {
+
+    console.error(
+      "Single Print Error:",
+      error
+    );
+
+    alert("Unable to load current Patti");
+
+    return null;
+  }
 };
-const handlePrint = async (language) => {
 
+
+// ================= LOAD ALL PATTI PRINT DATA =================
+
+const loadAllPrintData = async (
+  farmerName,
+  pattiDate
+) => {
+
+  try {
+
+    const response = await fetch(
+      `${API}/farmers-patti/print` +
+      `?farmer_name=${encodeURIComponent(farmerName)}` +
+      `&patti_date=${encodeURIComponent(pattiDate)}`
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+
+      console.error(
+        "All Print API Error:",
+        result
+      );
+
+      alert(
+        result.detail ||
+        "Unable to load all Pattis"
+      );
+
+      return null;
+    }
+
+    return result;
+
+  } catch (error) {
+
+    console.error(
+      "All Print Error:",
+      error
+    );
+
+    alert("Unable to load all Pattis");
+
+    return null;
+  }
+};
+
+
+// ================= HANDLE PRINT =================
+
+const handlePrint = async (
+  language,
+  printType
+) => {
+
+  // Close dropdown
   setShowPrintMenu(false);
 
-  const result = await loadPrintData(
-    formData.farmer_name,
-    formData.patti_date
-  );
 
-  if (!result) {
-    alert("Unable to load print data");
+  // ================= VALIDATION =================
+
+  if (!formData.farmer_name) {
+
+    alert("Please select a farmer");
+
     return;
   }
 
+  if (!formData.patti_date) {
+
+    alert("Patti date is missing");
+
+    return;
+  }
+
+
+  let result = null;
+
+
+  // ==================================================
+  // CURRENT / SINGLE PATTI
+  // ==================================================
+
+  if (printType === "single") {
+
+    if (!formData.serial_no) {
+
+      alert("Serial number is missing");
+
+      return;
+    }
+
+    if (!formData.book_no) {
+
+      alert("Book number is missing");
+
+      return;
+    }
+
+
+    result = await loadSinglePrintData(
+
+      formData.farmer_name,
+
+      formData.patti_date,
+
+      formData.serial_no,
+
+      formData.book_no
+
+    );
+
+  }
+
+
+  // ==================================================
+  // ALL PATTIS
+  // ==================================================
+
+  else if (printType === "all") {
+
+    result = await loadAllPrintData(
+
+      formData.farmer_name,
+
+      formData.patti_date
+
+    );
+
+  }
+
+
+  // ================= CHECK RESULT =================
+
+  if (!result) {
+
+    return;
+  }
+
+
+  // ================= SET PRINT DATA =================
+
   setPrintData({
+
     ...result,
-    language,
+
+    language: language
+
   });
 
-  requestAnimationFrame(() => {
+
+  // ================= START PRINT =================
+
+  setTimeout(() => {
+
     handleReactPrint();
-  });
+
+  }, 100);
 
 };
   // ================= LOAD ON PAGE OPEN =================
@@ -2164,33 +2874,30 @@ useEffect(() => {
 
       </div>
 
+  <div className="net-card">
 
-      {/* ================= NET VALUE ================= */}
+            <label>
 
-      <div className="net-card">
+              Total Bill
 
-        <h3>
-
-          Net Value
-
-        </h3>
+            </label>
 
 
-        <input
+            <input
 
-          type="number"
+              type="number"
 
-          value={
+              value={
 
-            totalNetValue
+                totalBillCalculation
 
-          }
+              }
 
-          readOnly
+              readOnly
 
-        />
+            />
 
-      </div>
+          </div>
 
 
     {/* ================= BUTTONS ================= */}
@@ -2207,7 +2914,7 @@ useEffect(() => {
         onClick={handlePrevious}
         disabled={currentItemIndex === 0}
       >
-        ◀ Previous
+        ◀ Previous 
       </button>
 
       <span className="item-count">
@@ -2245,7 +2952,7 @@ useEffect(() => {
         onClick={handlePrevious}
         disabled={currentItemIndex === 0}
       >
-        ◀ Previous Patti
+        ◀ Previous 
       </button>
 
       <span className="item-count">
@@ -2260,7 +2967,7 @@ useEffect(() => {
         onClick={handleNext}
         disabled={currentItemIndex >= pendingItems.length - 1}
       >
-        Next Patti ▶
+        Next  ▶
       </button>
 
     </>
@@ -2282,30 +2989,96 @@ useEffect(() => {
       Print ▼
     </button>
 
-    {showPrintMenu && (
+   {showPrintMenu && (
 
-      <div className="print-menu">
+  <div className="print-menu">
 
-        <button onClick={() => handlePrint("english")}>
-          English
-        </button>
+    {/* ================= CURRENT PATTI ================= */}
 
-        <button onClick={() => handlePrint("telugu")}>
-          తెలుగు
-        </button>
+    <div className="print-section-title">
+      Current Patti
+    </div>
 
-        <button onClick={() => handlePrint("hindi")}>
-          हिन्दी
-        </button>
+    <button
+      onClick={() =>
+        handlePrint("english", "single")
+      }
+    >
+      English
+    </button>
 
-        <button onClick={() => handlePrint("tamil")}>
-          தமிழ்
-        </button>
+    <button
+      onClick={() =>
+        handlePrint("telugu", "single")
+      }
+    >
+      తెలుగు
+    </button>
 
-      </div>
+    <button
+      onClick={() =>
+        handlePrint("hindi", "single")
+      }
+    >
+      हिन्दी
+    </button>
 
-    )}
+    <button
+      onClick={() =>
+        handlePrint("tamil", "single")
+      }
+    >
+      தமிழ்
+    </button>
 
+
+    {/* ================= SEPARATOR ================= */}
+
+    <hr />
+
+
+    {/* ================= ALL PATTIS ================= */}
+
+    <div className="print-section-title">
+      All Pattis
+    </div>
+
+    <button
+      onClick={() =>
+        handlePrint("english", "all")
+      }
+    >
+      English
+    </button>
+
+    <button
+      onClick={() =>
+        handlePrint("telugu", "all")
+      }
+    >
+      తెలుగు
+    </button>
+
+    <button
+      onClick={() =>
+        handlePrint("hindi", "all")
+      }
+    >
+      हिन्दी
+    </button>
+
+    <button
+      onClick={() =>
+        handlePrint("tamil", "all")
+      }
+    >
+      தமிழ்
+    </button>
+
+  </div>
+
+)}
+      
   </div>
 
   {/* Hidden Printable Component */}

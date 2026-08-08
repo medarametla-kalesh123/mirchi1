@@ -1,10 +1,191 @@
 import React, { forwardRef } from "react";
 import "./FarmersPattiPrint.css";
 
+const labels = {
+
+  english: {
+
+    title: "FARMER BILL",
+
+    farmer: "Farmer",
+    address: "Address",
+    billNo: "Bill No",
+    date: "Date",
+
+    sno: "S.No",
+    item: "Item",
+    boras: "Boras",
+    bags: "Bags",
+    netWeight: "Net Weight",
+    rate: "Rate / Qtl",
+    netValue: "Net Value",
+
+    grossAmount: "Gross Amount",
+    costOfBags: "Cost of Bags",
+    totalNetValue: "Total Net Value",
+
+    charges: "Charges",
+    commission: "Commission",
+    expense: "Expense",
+    yardCharges: "Yard Charges",
+    machu: "Machu",
+    nettuCooli: "Nettu Cooli",
+    freight: "Freight",
+    kataCooli: "Kata Cooli",
+    tolakam: "Tolakam",
+    rasiCooli: "Rasi Cooli",
+    cashAdvance: "Cash Advance",
+    loanAmount: "Loan Amount",
+    interest: "Interest",
+    totalCharges: "Total Charges",
+
+    amountPayable: "Amount Payable",
+
+    farmerSignature: "Farmer Signature",
+    authorizedSignature: "Authorized Signature",
+
+    
+  },
+
+  telugu: {
+
+    title: "రైతు బిల్లు",
+
+    farmer: "రైతు",
+    address: "చిరునామా",
+    billNo: "బిల్లు నెం",
+    date: "తేదీ",
+
+    sno: "క్ర.సం",
+    item: "వస్తువు",
+    boras: "బోరాలు",
+    bags: "బస్తాలు",
+    netWeight: "నికర బరువు",
+    rate: "క్వింటాల్ ధర",
+    netValue: "నికర విలువ",
+
+    grossAmount: "మొత్తం విలువ",
+    costOfBags: "బస్తాల ఖర్చు",
+    totalNetValue: "మొత్తం నికర విలువ",
+
+    charges: "ఖర్చులు",
+    commission: "కమిషన్",
+    expense: "ఖర్చు",
+    yardCharges: "యార్డ్ ఛార్జీలు",
+    machu: "మచ్చు",
+    nettuCooli: "నెత్తు కూలి",
+    freight: "రవాణా",
+    kataCooli: "కాటా కూలి",
+    tolakam: "తూకం",
+    rasiCooli: "రాశి కూలి",
+    cashAdvance: "నగదు అడ్వాన్స్",
+    loanAmount: "రుణం",
+    interest: "వడ్డీ",
+    totalCharges: "మొత్తం ఖర్చులు",
+
+    amountPayable: "చెల్లించవలసిన మొత్తం",
+
+    farmerSignature: "రైతు సంతకం",
+    authorizedSignature: "అధికార సంతకం",
+
+    
+  },
+
+  hindi: {
+
+    title: "किसान बिल",
+
+    farmer: "किसान",
+    address: "पता",
+    billNo: "बिल नं",
+    date: "दिनांक",
+
+    sno: "क्र.",
+    item: "वस्तु",
+    boras: "बोरे",
+    bags: "बैग",
+    netWeight: "शुद्ध वजन",
+    rate: "दर / क्विंटल",
+    netValue: "शुद्ध मूल्य",
+
+    grossAmount: "कुल राशि",
+    costOfBags: "बोरों का खर्च",
+    totalNetValue: "कुल शुद्ध मूल्य",
+
+    charges: "कटौतियाँ",
+    commission: "कमीशन",
+    expense: "खर्च",
+    yardCharges: "यार्ड शुल्क",
+    machu: "माचू",
+    nettuCooli: "नेट्टू कूली",
+    freight: "भाड़ा",
+    kataCooli: "काटा कूली",
+    tolakam: "तौल",
+    rasiCooli: "रासी कूली",
+    cashAdvance: "नकद अग्रिम",
+    loanAmount: "ऋण",
+    interest: "ब्याज",
+    totalCharges: "कुल कटौती",
+
+    amountPayable: "देय राशि",
+
+    farmerSignature: "किसान हस्ताक्षर",
+    authorizedSignature: "अधिकृत हस्ताक्षर",
+
+    
+  },
+
+  tamil: {
+
+    title: "விவசாயி பில்",
+
+    farmer: "விவசாயி",
+    address: "முகவரி",
+    billNo: "பில் எண்",
+    date: "தேதி",
+
+    sno: "எண்",
+    item: "பொருள்",
+    boras: "போர்கள்",
+    bags: "மூட்டைகள்",
+    netWeight: "நிகர எடை",
+    rate: "விலை / குவிண்டால்",
+    netValue: "நிகர மதிப்பு",
+
+    grossAmount: "மொத்த தொகை",
+    costOfBags: "மூட்டை செலவு",
+    totalNetValue: "மொத்த நிகர மதிப்பு",
+
+    charges: "கழிவுகள்",
+    commission: "கமிஷன்",
+    expense: "செலவு",
+    yardCharges: "யார்டு கட்டணம்",
+    machu: "மச்சு",
+    nettuCooli: "நெட்டு கூலி",
+    freight: "சரக்கு கட்டணம்",
+    kataCooli: "கட்டா கூலி",
+    tolakam: "தூக்கம்",
+    rasiCooli: "ராசி கூலி",
+    cashAdvance: "பண முன்பணம்",
+    loanAmount: "கடன்",
+    interest: "வட்டி",
+    totalCharges: "மொத்த கழிவுகள்",
+
+    amountPayable: "செலுத்த வேண்டிய தொகை",
+
+    farmerSignature: "விவசாயி கையொப்பம்",
+    authorizedSignature: "அங்கீகரிக்கப்பட்ட கையொப்பம்",
+
+  
+  }
+
+};
+
 const FarmersPattiPrint = forwardRef(
   ({ printData, setPage }, ref) => {
 
     if (!printData) return null;
+    const t = labels[printData.language] || labels.english;
 
     return (
 
@@ -14,12 +195,9 @@ const FarmersPattiPrint = forwardRef(
       >
 
         {/* ================= TITLE ================= */}
-
-        <h1 className="title">
-
-          FARMERS PATTI
-
-        </h1>
+<h1 className="title">
+  {t.title}
+</h1>
 
         {/* ================= HEADER ================= */}
 
@@ -29,14 +207,14 @@ const FarmersPattiPrint = forwardRef(
 
             <p>
 
-              <strong>Farmer :</strong>{" "}
+             <strong>{t.farmer} :</strong>{" "}
               {printData.farmer_name}
 
             </p>
 
             <p>
 
-              <strong>Address :</strong>{" "}
+              <strong>{t.address} :</strong>{" "}
               {printData.address}
 
             </p>
@@ -47,14 +225,14 @@ const FarmersPattiPrint = forwardRef(
 
             <p>
 
-              <strong>Bill No :</strong>{" "}
+              <strong>{t.billNo} :</strong>{" "}
               {printData.bill_no}
 
             </p>
 
             <p>
 
-              <strong>Date :</strong>{" "}
+              <strong>{t.date} :</strong>{" "}
               {printData.date}
 
             </p>
@@ -71,20 +249,13 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <th>S.No</th>
-
-              <th>Item</th>
-
-              <th>Boras</th>
-
-              <th>Bags</th>
-
-              <th>Net Weight</th>
-
-              <th>Rate / Qtl</th>
-
-              <th>Net Value</th>
-
+             <th>{t.sno}</th>
+<th>{t.item}</th>
+<th>{t.boras}</th>
+<th>{t.bags}</th>
+<th>{t.netWeight}</th>
+<th>{t.rate}</th>
+<th>{t.netValue}</th>
             </tr>
 
           </thead>
@@ -131,8 +302,7 @@ const FarmersPattiPrint = forwardRef(
 
               <td>
 
-                <strong>Gross Amount</strong>
-
+                <strong>{t.grossAmount}</strong>
               </td>
 
               <td>
@@ -147,7 +317,7 @@ const FarmersPattiPrint = forwardRef(
 
               <td>
 
-                <strong>Cost of Bags</strong>
+                <strong>{t.costOfBags}</strong>
 
               </td>
 
@@ -155,7 +325,7 @@ const FarmersPattiPrint = forwardRef(
 
                 ₹ {Number(printData.cost_of_bags).toFixed(2)}
                 {" "}
-                ({Number(printData.cost_per_bag).toFixed(2)}/Bag)
+               ({Number(printData.cost_per_bag).toFixed(2)}/{t.bags})
 
               </td>
 
@@ -165,7 +335,7 @@ const FarmersPattiPrint = forwardRef(
 
               <td>
 
-                <strong>Total Net Value</strong>
+               <strong>{t.totalNetValue}</strong>
 
               </td>
 
@@ -185,7 +355,7 @@ const FarmersPattiPrint = forwardRef(
 
         <h2 className="charges-title">
 
-          Charges
+          {t.charges}
 
         </h2>
 
@@ -195,7 +365,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Commission</td>
+             <td>{t.commission}</td>
 
               <td>
 
@@ -207,7 +377,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Expense</td>
+             <td>{t.expense}</td>
 
               <td>
 
@@ -219,7 +389,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Yard Charges</td>
+             <td>{t.yardCharges}</td>
 
               <td>
 
@@ -231,7 +401,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Machu</td>
+              <td>{t.machu}</td>
 
               <td>
 
@@ -243,8 +413,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Nettu Cooli</td>
-
+              <td>{t.nettuCooli}</td>
               <td>
 
                 ₹ {Number(printData.nettu_cooli).toFixed(2)}
@@ -255,8 +424,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Freight</td>
-
+              <td>{t.freight}</td>
               <td>
 
                 ₹ {Number(printData.freight).toFixed(2)}
@@ -267,8 +435,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Kata Cooli</td>
-
+              <td>{t.kataCooli}</td>
               <td>
 
                 ₹ {Number(printData.kata_cooli).toFixed(2)}
@@ -279,7 +446,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Tolakam</td>
+              <td>{t.tolakam}</td>
 
               <td>
 
@@ -291,7 +458,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Rasi Cooli</td>
+             <td>{t.rasiCooli}</td>
 
               <td>
 
@@ -303,7 +470,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Cash Advance</td>
+              <td>{t.cashAdvance}</td>
 
               <td>
 
@@ -315,8 +482,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Loan Amount</td>
-
+              <td>{t.loanAmount}</td>
               <td>
 
                 ₹ {Number(printData.loan_amount).toFixed(2)}
@@ -327,7 +493,7 @@ const FarmersPattiPrint = forwardRef(
 
             <tr>
 
-              <td>Interest</td>
+             <td>{t.interest}</td>
 
               <td>
 
@@ -341,8 +507,7 @@ const FarmersPattiPrint = forwardRef(
 
               <td>
 
-                <strong>Total Charges</strong>
-
+                <strong>{t.totalCharges}</strong>
               </td>
 
               <td>
@@ -367,7 +532,7 @@ const FarmersPattiPrint = forwardRef(
 
           <span>
 
-            Amount Payable
+           {t.amountPayable}
 
           </span>
 
@@ -389,7 +554,7 @@ const FarmersPattiPrint = forwardRef(
 
             <br />
 
-            Farmer Signature
+           {t.farmerSignature}
 
           </div>
 
@@ -399,8 +564,7 @@ const FarmersPattiPrint = forwardRef(
 
             <br />
 
-            Authorized Signature
-
+           {t.authorizedSignature}
           </div>
 
         </div>

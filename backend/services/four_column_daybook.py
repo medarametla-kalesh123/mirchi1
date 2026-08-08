@@ -10,7 +10,6 @@ from models.traders_due_report import TradersDueReport
 from models.farmers_due_report import FarmersDueReport
 
 
-
 # =====================================================
 # CREATE
 # =====================================================
@@ -56,13 +55,9 @@ def create_daybook_entry(
 
     )
 
-
     db.add(new_entry)
 
-    db.commit()
-
-    db.refresh(new_entry)
-
+    db.flush()
 
 
     # ==========================================
@@ -85,9 +80,7 @@ def create_daybook_entry(
         town = ""
 
         if trader_account:
-
-            town = trader_account.town
-
+            town = trader_account.town or ""
 
 
         traders_due = TradersDueReport(
@@ -104,11 +97,7 @@ def create_daybook_entry(
 
         )
 
-
         db.add(traders_due)
-
-        db.commit()
-
 
 
     # ==========================================
@@ -131,9 +120,7 @@ def create_daybook_entry(
         town = ""
 
         if farmer_account:
-
-            town = farmer_account.town
-
+            town = farmer_account.town or ""
 
 
         farmers_due = FarmersDueReport(
@@ -150,17 +137,18 @@ def create_daybook_entry(
 
         )
 
-
         db.add(farmers_due)
 
-        db.commit()
 
+    # ==========================================
+    # SINGLE COMMIT
+    # ==========================================
 
+    db.commit()
+
+    db.refresh(new_entry)
 
     return new_entry
-
-
-
 
 
 # =====================================================
@@ -182,19 +170,13 @@ def get_all_daybook_entries(
     ).all()
 
 
-
-
-
 # =====================================================
 # GET BY ID
 # =====================================================
 
 def get_daybook_entry(
-
     db: Session,
-
     entry_id: int
-
 ):
 
     return db.query(
@@ -208,21 +190,14 @@ def get_daybook_entry(
     ).first()
 
 
-
-
-
 # =====================================================
 # UPDATE
 # =====================================================
 
 def update_daybook_entry(
-
     db: Session,
-
     entry_id: int,
-
     entry: FourColumnDayBookCreate
-
 ):
 
     existing_entry = db.query(
@@ -236,12 +211,70 @@ def update_daybook_entry(
     ).first()
 
 
-
     if not existing_entry:
-
         return None
 
 
+    # =================================================
+    # SAVE OLD VALUES BEFORE UPDATE
+    # =================================================
+
+    old_group_name = existing_entry.group_name
+
+    old_account_name = existing_entry.account_name
+
+    old_bill_no = existing_entry.bill_no
+
+
+    # =================================================
+    # REMOVE OLD DUE REPORT RECORD
+    #
+    # This is important when:
+    #
+    # Trader -> Trader
+    # Trader -> Farmer
+    # Farmer -> Trader
+    # Bill No changes
+    # Account changes
+    # =================================================
+
+    if old_group_name == "Traders":
+
+        db.query(
+
+            TradersDueReport
+
+        ).filter(
+
+            TradersDueReport.account_name == old_account_name,
+
+            TradersDueReport.bill_no == old_bill_no
+
+        ).delete(
+            synchronize_session=False
+        )
+
+
+    if old_group_name == "Farmers":
+
+        db.query(
+
+            FarmersDueReport
+
+        ).filter(
+
+            FarmersDueReport.account_name == old_account_name,
+
+            FarmersDueReport.bill_no == old_bill_no
+
+        ).delete(
+            synchronize_session=False
+        )
+
+
+    # =================================================
+    # UPDATE FOUR COLUMN DAY BOOK
+    # =================================================
 
     existing_entry.transaction_no = entry.transaction_no
 
@@ -272,15 +305,95 @@ def update_daybook_entry(
     existing_entry.running_total = entry.running_total
 
 
+    # =================================================
+    # CREATE NEW TRADER DUE RECORD
+    # =================================================
+
+    if entry.group_name == "Traders":
+
+        trader_account = db.query(
+            Account
+        ).filter(
+
+            Account.account_name == entry.account_name,
+
+            Account.group_name == "Traders"
+
+        ).first()
+
+
+        town = ""
+
+        if trader_account:
+            town = trader_account.town or ""
+
+
+        traders_due = TradersDueReport(
+
+            town=town,
+
+            account_name=entry.account_name,
+
+            bill_date=entry.date,
+
+            bill_no=entry.bill_no,
+
+            bill_amount=entry.amount
+
+        )
+
+        db.add(traders_due)
+
+
+    # =================================================
+    # CREATE NEW FARMER DUE RECORD
+    # =================================================
+
+    if entry.group_name == "Farmers":
+
+        farmer_account = db.query(
+            Account
+        ).filter(
+
+            Account.account_name == entry.account_name,
+
+            Account.group_name == "Farmers"
+
+        ).first()
+
+
+        town = ""
+
+        if farmer_account:
+            town = farmer_account.town or ""
+
+
+        farmers_due = FarmersDueReport(
+
+            town=town,
+
+            account_name=entry.account_name,
+
+            bill_date=entry.date,
+
+            bill_no=entry.bill_no,
+
+            bill_amount=entry.amount
+
+        )
+
+        db.add(farmers_due)
+
+
+    # =================================================
+    # SINGLE COMMIT
+    # =================================================
 
     db.commit()
 
     db.refresh(existing_entry)
 
     return existing_entry
-
-
-
 
 
 # =====================================================
@@ -304,17 +417,12 @@ VOUCHER_START_NUMBERS = {
 }
 
 
-
-
-
 # =====================================================
 # NEXT BILL NUMBER
 # =====================================================
 
 def get_next_bill_no(
-
     db: Session
-
 ):
 
     last_bill = db.query(
@@ -328,17 +436,11 @@ def get_next_bill_no(
     ).first()
 
 
-
     if not last_bill:
-
         return 1000
 
 
-
     return int(last_bill.bill_no) + 1
-
-
-
 
 
 # =====================================================
@@ -346,9 +448,7 @@ def get_next_bill_no(
 # =====================================================
 
 def get_next_transaction_no(
-
     db: Session
-
 ):
 
     last_transaction = db.query(
@@ -362,17 +462,11 @@ def get_next_transaction_no(
     ).first()
 
 
-
     if not last_transaction:
-
         return 1000
 
 
-
     return int(last_transaction.transaction_no) + 1
-
-
-
 
 
 # =====================================================
@@ -380,11 +474,8 @@ def get_next_transaction_no(
 # =====================================================
 
 def get_next_voucher_no(
-
     db: Session,
-
     voucher_type: str
-
 ):
 
     return VOUCHER_START_NUMBERS.get(
@@ -396,26 +487,23 @@ def get_next_voucher_no(
     )
 
 
-
-
-
 # =====================================================
 # NEW ENTRY DEFAULTS
 # =====================================================
 
 def get_new_daybook_defaults(
-
     db: Session,
-
     voucher_type: str
-
 ):
 
     return {
 
         "transaction_no": get_next_transaction_no(db),
 
-        "voucher_no": get_next_voucher_no(db, voucher_type),
+        "voucher_no": get_next_voucher_no(
+            db,
+            voucher_type
+        ),
 
         "date": date.today(),
 
@@ -426,19 +514,13 @@ def get_new_daybook_defaults(
     }
 
 
-
-
-
 # =====================================================
 # DELETE
 # =====================================================
 
 def delete_daybook_entry(
-
     db: Session,
-
     entry_id: int
-
 ):
 
     existing_entry = db.query(
@@ -452,16 +534,13 @@ def delete_daybook_entry(
     ).first()
 
 
-
     if not existing_entry:
-
         return None
 
 
-
-    # ==========================================
+    # =================================================
     # DELETE FARMERS DUE REPORT
-    # ==========================================
+    # =================================================
 
     if existing_entry.group_name == "Farmers":
 
@@ -471,17 +550,20 @@ def delete_daybook_entry(
 
         ).filter(
 
-            FarmersDueReport.account_name == existing_entry.account_name,
+            FarmersDueReport.account_name ==
+            existing_entry.account_name,
 
-            FarmersDueReport.bill_no == existing_entry.bill_no
+            FarmersDueReport.bill_no ==
+            existing_entry.bill_no
 
-        ).delete()
+        ).delete(
+            synchronize_session=False
+        )
 
 
-
-    # ==========================================
+    # =================================================
     # DELETE TRADERS DUE REPORT
-    # ==========================================
+    # =================================================
 
     if existing_entry.group_name == "Traders":
 
@@ -491,17 +573,20 @@ def delete_daybook_entry(
 
         ).filter(
 
-            TradersDueReport.account_name == existing_entry.account_name,
+            TradersDueReport.account_name ==
+            existing_entry.account_name,
 
-            TradersDueReport.bill_no == existing_entry.bill_no
+            TradersDueReport.bill_no ==
+            existing_entry.bill_no
 
-        ).delete()
+        ).delete(
+            synchronize_session=False
+        )
 
 
-
-    # ==========================================
+    # =================================================
     # DELETE FOUR COLUMN DAY BOOK
-    # ==========================================
+    # =================================================
 
     db.delete(existing_entry)
 

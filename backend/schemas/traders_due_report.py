@@ -3,6 +3,10 @@ from datetime import date
 from pydantic import BaseModel
 
 
+# =====================================================
+# CREATE
+# =====================================================
+
 class TradersDueReportCreate(BaseModel):
 
     town: str | None = None
@@ -15,6 +19,10 @@ class TradersDueReportCreate(BaseModel):
 
     bill_amount: float
 
+
+# =====================================================
+# RESPONSE
+# =====================================================
 
 class TradersDueReportResponse(BaseModel):
 
@@ -29,6 +37,14 @@ class TradersDueReportResponse(BaseModel):
     bill_no: str
 
     bill_amount: float
+
+    # ================================================
+    # 14-DAY DUE INFORMATION
+    # ================================================
+
+    due_date: date
+
+    due_days: int
 
 
     class Config:

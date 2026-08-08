@@ -358,35 +358,38 @@
    NET VALUE
 ===================================================== */
 
-.net-card {
-    margin-top: 25px;
-    background: #f8fafc;
-    border: 1px solid #e4e7eb;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* ================= Total Bill ================= */
+
+.net-card{
+    margin-top:25px;
+    background:#f8fafc;
+    border:1px solid #e4e7eb;
+    border-radius:8px;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-.net-card h3 {
-    color: #234d7d;
-    margin: 0;
+.net-card label{
+    color:#234d7d;
+    font-size:30px;
+    font-weight:700;
 }
 
-.net-card input {
-    width: 260px;
-    height: 42px;
-    border: 2px solid #28a745;
-    border-radius: 6px;
-    font-size: 18px;
-    font-weight: 600;
-    text-align: right;
-    padding: 0 15px;
-    background: #ffffff;
-    box-sizing: border-box;
+.net-card input{
+    width:260px;
+    height:42px;
+    padding:0 15px;
+    border:2px solid #28a745;
+    border-radius:6px;
+    background:#ffffff;
+    box-sizing:border-box;
+    text-align:right;
+    font-size:18px;
+    font-weight:700;
+    color:#000;
 }
-
 
 /* =====================================================
    ACTION BUTTONS

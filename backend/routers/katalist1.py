@@ -108,6 +108,7 @@ def fetch_farmers(
 def fetch_trader_details(
     trader_name: str,
     entry_date: date = Query(...),
+   
     db: Session = Depends(get_db)
 ):
 
@@ -115,6 +116,7 @@ def fetch_trader_details(
         db,
         trader_name,
         entry_date
+        
     )
     
     # ================= GET FARMER DETAILS =================
@@ -122,7 +124,7 @@ def fetch_trader_details(
 @router.get("/farmer/{farmer_name}")
 def fetch_farmer_details(
     farmer_name: str,
-    entry_date: date = Query(...),
+    entry_date: date,
     db: Session = Depends(get_db)
 ):
 

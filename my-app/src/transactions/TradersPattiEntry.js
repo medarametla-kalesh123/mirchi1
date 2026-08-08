@@ -65,40 +65,146 @@ const handleReactPrint = useReactToPrint({
   documentTitle: "Traders Patti",
 });
 
-const loadPrintData = async (traderName, pattiDate) => {
+// ================= LOAD PRINT DATA =================
 
-  const response = await fetch(
+const loadPrintData = async (
+  traderName,
+  pattiDate,
+  serialNo,
+  bookNo,
+  printType
+) => {
 
-    `${API}/traderspatti/print?trader_name=${encodeURIComponent(
-      traderName
-    )}&patti_date=${pattiDate}`
+  try {
 
-  );
+    let url = "";
 
-  const result = await response.json();
+    // ================= CURRENT PATTI =================
 
-  return result;
+    if (printType === "single") {
+
+      url =
+        `${API}/traderspatti/print-single` +
+        `?trader_name=${encodeURIComponent(traderName)}` +
+        `&patti_date=${pattiDate}` +
+        `&serial_no=${encodeURIComponent(serialNo)}` +
+        `&book_no=${encodeURIComponent(bookNo)}`;
+
+    }
+
+    // ================= ALL PATTIS =================
+
+    else {
+
+      url =
+        `${API}/traderspatti/print-all` +
+        `?trader_name=${encodeURIComponent(traderName)}` +
+        `&patti_date=${pattiDate}`;
+
+    }
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+
+      const errorText = await response.text();
+
+      console.log("Print API Error:", errorText);
+
+      alert("please save before print");
+
+      return null;
+
+    }
+
+    const result = await response.json();
+
+    return result;
+
+  }
+
+  catch (error) {
+
+    console.log("Print Error:", error);
+
+    alert("please save before print");
+
+    return null;
+
+  }
 
 };
 
-const handlePrint = async (language) => {
+
+// ================= PRINT =================
+
+const handlePrint = async (
+  language,
+  printType
+) => {
 
   setShowPrintMenu(false);
 
-  const result = await loadPrintData(
 
-    formData.trader_name,
-    formData.patti_date
+  // ================= VALIDATION =================
 
-  );
+  if (!formData.trader_name) {
 
-  if (!result) {
-
-    alert("Unable to load print data");
+    alert("Please select Trader");
 
     return;
 
   }
+
+  if (!formData.patti_date) {
+
+    alert("Please select Patti Date");
+
+    return;
+
+  }
+
+
+  // Current Patti needs serial + book number
+
+  if (printType === "single") {
+
+    if (!formData.serial_no || !formData.book_no) {
+
+      alert("Serial No and Book No are required");
+
+      return;
+
+    }
+
+  }
+
+
+  // ================= LOAD PRINT DATA =================
+
+  const result = await loadPrintData(
+
+    formData.trader_name,
+
+    formData.patti_date,
+
+    formData.serial_no,
+
+    formData.book_no,
+
+    printType
+
+  );
+
+
+  if (!result) {
+
+    return;
+
+  }
+
+
+  // ================= SET PRINT DATA =================
 
   setPrintData({
 
@@ -107,6 +213,9 @@ const handlePrint = async (language) => {
     language
 
   });
+
+
+  // ================= PRINT =================
 
   requestAnimationFrame(() => {
 
@@ -118,41 +227,72 @@ const handlePrint = async (language) => {
 
   //================ LOAD DEFAULTS =================
 
-  const loadDefaults = async () => {
+ //================ LOAD DEFAULTS =================
 
-    try {
+// ================= LOAD DEFAULTS =================
 
-      const response = await fetch(
-        `${API}/traderspatti/next-defaults`
-      );
+const loadDefaults = async (keepDate = false) => {
 
-      const data = await response.json();
+  try {
 
-      if (response.ok) {
+    const response = await fetch(
+      `${API}/traderspatti/next-defaults`
+    );
 
-       setFormData(prev => ({
+    const data = await response.json();
 
-  ...prev,
+    if (response.ok) {
 
-  book_no: data.book_no,
-  serial_no: data.serial_no,
-  patti_date: data.patti_date,
+      setFormData(prev => ({
 
-  period_from: data.patti_date,
-  period_to: data.patti_date
+        ...prev,
 
-}));
-      }
+        book_no: data.book_no,
+
+        serial_no: data.serial_no,
+
+        patti_date: keepDate
+          ? prev.patti_date
+          : data.patti_date,
+
+        period_from: keepDate
+          ? prev.period_from
+          : data.patti_date,
+
+        period_to: keepDate
+          ? prev.period_to
+          : data.patti_date
+
+      }));
 
     }
 
-    catch (error) {
+  } catch (error) {
 
-      console.log(error);
+    console.log(error);
 
-    }
+  }
 
-  };
+};
+
+// ================= GET TODAY DATE =================
+
+const getTodayDate = () => {
+
+  const today = new Date();
+
+  const year = today.getFullYear();
+
+  const month = String(
+    today.getMonth() + 1
+  ).padStart(2, "0");
+
+  const day = String(
+    today.getDate()
+  ).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
   //================ LOAD SAVED TRADERS =================
 
 const loadSavedTraders = async (selectedDate) => {
@@ -207,83 +347,228 @@ const loadSavedTraders = async (selectedDate) => {
 
   //================ LOAD TRADER DETAILS =================
 
-  const loadTraderDetails = async (traderName, selectedDate) => {
+ // ================= LOAD TRADER DETAILS =================
+
+const loadTraderDetails = async (traderName) => {
 
   try {
+
+    if (!traderName) {
+      setPendingItems([]);
+      setCurrentItemIndex(0);
+      setItems([]);
+      return;
+    }
+
+    const today = getTodayDate();
 
     const response = await fetch(
       `${API}/katalist1/trader/${encodeURIComponent(
         traderName
-      )}?entry_date=${selectedDate}`
+      )}?entry_date=${today}`
     );
+
+    if (!response.ok) {
+      setPendingItems([]);
+      setCurrentItemIndex(0);
+      setItems([]);
+      return;
+    }
 
     const data = await response.json();
 
-    setPendingItems(data);
+    console.log(
+      "TRADER PENDING ITEMS UPTO TODAY:",
+      data
+    );
 
+    setPendingItems(data);
     setCurrentItemIndex(0);
 
     if (data.length > 0) {
 
-      setItems([data[0]]);
+      const first = data[0];
+
+      setItems([first]);
+
+      setFormData(prev => ({
+        ...prev,
+
+        trader_name: traderName,
+
+        patti_date:
+          first.entry_date || today,
+
+        period_from:
+          first.entry_date || today,
+
+        period_to:
+          first.entry_date || today,
+
+        gross_amount:
+          Number(first.gross_amount || 0),
+
+        cost_per_bag:
+          Number(first.cost_of_bags || 0),
+
+        market_fee:
+          Number(first.market_fee || 0),
+
+        net_value:
+          Number(first.net_value || 0)
+      }));
 
     } else {
 
       setItems([]);
 
+      setFormData(prev => ({
+        ...prev,
+
+        trader_name: traderName,
+
+        patti_date: today,
+        period_from: today,
+        period_to: today,
+
+        gross_amount: 0,
+        cost_per_bag: 0,
+        market_fee: 0,
+        net_value: 0
+      }));
+
     }
 
-  }
+  } catch (error) {
 
-  catch (error) {
+    console.log(
+      "Error loading trader details:",
+      error
+    );
 
-    console.log(error);
-
+    setPendingItems([]);
+    setCurrentItemIndex(0);
     setItems([]);
 
   }
 
 };
+// ================= SHOW CURRENT PENDING ITEM =================
 
 const showCurrentItem = (index) => {
 
-  if (index < 0 || index >= pendingItems.length)
+  if (
+    index < 0 ||
+    index >= pendingItems.length
+  ) {
     return;
+  }
+
+  const selectedItem =
+    pendingItems[index];
 
   setCurrentItemIndex(index);
 
-  setItems([pendingItems[index]]);
+  setItems([
+    selectedItem
+  ]);
+
+  setFormData(prev => ({
+
+    ...prev,
+
+    // ==================================================
+    // IMPORTANT:
+    // USE SELECTED ITEM DATE
+    // ==================================================
+
+    patti_date:
+      selectedItem.entry_date ||
+      prev.patti_date,
+
+    period_from:
+      selectedItem.entry_date ||
+      prev.period_from,
+
+    period_to:
+      selectedItem.entry_date ||
+      prev.period_to,
+
+    gross_amount:
+      Number(
+        selectedItem.gross_amount || 0
+      ),
+
+    cost_per_bag:
+      Number(
+        selectedItem.cost_of_bags || 0
+      ),
+
+    market_fee:
+      Number(
+        selectedItem.market_fee || 0
+      ),
+
+    net_value:
+      Number(
+        selectedItem.net_value || 0
+      )
+
+  }));
 
 };
+
+// ================= PREVIOUS =================
 
 const handlePrevious = async () => {
 
+  // ==================================================
+  // RETRIEVE SAVED PATTI
+  // ==================================================
+
   if (isSavedPatti) {
 
-    if (currentItemIndex === 0)
-        return;
+    if (currentItemIndex === 0) {
+      return;
+    }
 
-    const index = currentItemIndex - 1;
+    const index =
+      currentItemIndex - 1;
 
-    const current = pendingItems[index];
+    const current =
+      pendingItems[index];
 
     const response = await fetch(
 
-`${API}/traderspatti/saved?trader_name=${encodeURIComponent(
-formData.trader_name
-)}&patti_date=${formData.patti_date}&serial_no=${current.serial_no}&book_no=${current.book_no}`
+      `${API}/traderspatti/saved` +
+      `?trader_name=${encodeURIComponent(
+        formData.trader_name
+      )}` +
+      `&patti_date=${encodeURIComponent(
+        formData.patti_date
+      )}` +
+      `&serial_no=${encodeURIComponent(
+        current.serial_no
+      )}` +
+      `&book_no=${encodeURIComponent(
+        current.book_no
+      )}`
 
     );
 
-    if (!response.ok)
-        return;
+    if (!response.ok) {
+      return;
+    }
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
-    if (data.length === 0)
-        return;
+    if (data.length === 0) {
+      return;
+    }
 
-    const first = data[0];
+    const first =
+      data[0];
 
     setCurrentItemIndex(index);
 
@@ -291,58 +576,135 @@ formData.trader_name
 
     setFormData(prev => ({
 
-        ...prev,
+      ...prev,
 
-        serial_no:first.serial_no,
-        book_no:first.book_no,
+      serial_no:
+        first.serial_no,
 
-        gross_amount:data.reduce((s,r)=>s+Number(r.gross_amount||0),0),
+      book_no:
+        first.book_no,
 
-        cost_per_bag:data.reduce((s,r)=>s+Number(r.cost_of_bags||0),0),
+      patti_date:
+        first.patti_date,
 
-        market_fee:data.reduce((s,r)=>s+Number(r.market_fee||0),0),
+      period_from:
+        first.period_from,
 
-        net_value:data.reduce((s,r)=>s+Number(r.net_value||0),0)
+      period_to:
+        first.period_to,
+
+      gross_amount:
+        data.reduce(
+          (s, r) =>
+            s +
+            Number(
+              r.gross_amount || 0
+            ),
+          0
+        ),
+
+      cost_per_bag:
+        data.reduce(
+          (s, r) =>
+            s +
+            Number(
+              r.cost_of_bags || 0
+            ),
+          0
+        ),
+
+      market_fee:
+        data.reduce(
+          (s, r) =>
+            s +
+            Number(
+              r.market_fee || 0
+            ),
+          0
+        ),
+
+      net_value:
+        data.reduce(
+          (s, r) =>
+            s +
+            Number(
+              r.net_value || 0
+            ),
+          0
+        )
 
     }));
 
     return;
+  }
 
-}
+  // ==================================================
+  // PENDING PATTI
+  // ==================================================
 
-  if (currentItemIndex > 0)
-      showCurrentItem(currentItemIndex-1);
+  if (currentItemIndex > 0) {
+
+    showCurrentItem(
+      currentItemIndex - 1
+    );
+
+  }
 
 };
+// ================= NEXT =================
 
 const handleNext = async () => {
 
+  // ==================================================
+  // RETRIEVE SAVED PATTI
+  // ==================================================
+
   if (isSavedPatti) {
 
-    if (currentItemIndex >= pendingItems.length - 1)
-        return;
+    if (
+      currentItemIndex >=
+      pendingItems.length - 1
+    ) {
+      return;
+    }
 
-    const index = currentItemIndex + 1;
+    const index =
+      currentItemIndex + 1;
 
-    const current = pendingItems[index];
+    const current =
+      pendingItems[index];
 
     const response = await fetch(
 
-`${API}/traderspatti/saved?trader_name=${encodeURIComponent(
-formData.trader_name
-)}&patti_date=${formData.patti_date}&serial_no=${current.serial_no}&book_no=${current.book_no}`
+      `${API}/traderspatti/saved` +
+      `?trader_name=${encodeURIComponent(
+        formData.trader_name
+      )}` +
+      `&patti_date=${encodeURIComponent(
+        formData.patti_date
+      )}` +
+      `&serial_no=${encodeURIComponent(
+        current.serial_no
+      )}` +
+      `&book_no=${encodeURIComponent(
+        current.book_no
+      )}`
 
     );
 
-    if (!response.ok)
-        return;
+    if (!response.ok) {
+      return;
+    }
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
-    if (data.length === 0)
-        return;
+    if (data.length === 0) {
+      return;
+    }
 
-    const first = data[0];
+    const first =
+      data[0];
 
     setCurrentItemIndex(index);
 
@@ -350,27 +712,82 @@ formData.trader_name
 
     setFormData(prev => ({
 
-        ...prev,
+      ...prev,
 
-        serial_no:first.serial_no,
-        book_no:first.book_no,
+      serial_no:
+        first.serial_no,
 
-        gross_amount:data.reduce((s,r)=>s+Number(r.gross_amount||0),0),
+      book_no:
+        first.book_no,
 
-        cost_per_bag:data.reduce((s,r)=>s+Number(r.cost_of_bags||0),0),
+      patti_date:
+        first.patti_date,
 
-        market_fee:data.reduce((s,r)=>s+Number(r.market_fee||0),0),
+      period_from:
+        first.period_from,
 
-        net_value:data.reduce((s,r)=>s+Number(r.net_value||0),0)
+      period_to:
+        first.period_to,
+
+      gross_amount:
+        data.reduce(
+          (s, r) =>
+            s +
+            Number(
+              r.gross_amount || 0
+            ),
+          0
+        ),
+
+      cost_per_bag:
+        data.reduce(
+          (s, r) =>
+            s +
+            Number(
+              r.cost_of_bags || 0
+            ),
+          0
+        ),
+
+      market_fee:
+        data.reduce(
+          (s, r) =>
+            s +
+            Number(
+              r.market_fee || 0
+            ),
+          0
+        ),
+
+      net_value:
+        data.reduce(
+          (s, r) =>
+            s +
+            Number(
+              r.net_value || 0
+            ),
+          0
+        )
 
     }));
 
     return;
+  }
 
-}
+  // ==================================================
+  // PENDING PATTI
+  // ==================================================
 
-  if(currentItemIndex<pendingItems.length-1)
-      showCurrentItem(currentItemIndex+1);
+  if (
+    currentItemIndex <
+    pendingItems.length - 1
+  ) {
+
+    showCurrentItem(
+      currentItemIndex + 1
+    );
+
+  }
 
 };
  const loadAccountAddress = async (traderName) => {
@@ -410,66 +827,111 @@ formData.trader_name
 };
   //================ KATA TYPE =================
 
+// ================= KATA TRADER TYPE =================
+
 const handleKataTraderTypeChange = async (e) => {
 
   const selectedType = e.target.value;
 
   setKataTraderType(selectedType);
 
-  // Clear previous data
+  // ==================================================
+  // CLEAR PREVIOUS STATE
+  // ==================================================
+
+  setPendingItems([]);
+  setCurrentItemIndex(0);
   setItems([]);
+  setTraders([]);
 
   setFormData(prev => ({
     ...prev,
+
     trader_name: "",
     address: "",
     licence_no: "",
+
+    book_no: "",
+    serial_no: "",
+
     gross_amount: 0,
     cost_per_bag: 0,
     market_fee: 0,
     net_value: 0,
+
     period_from: "",
     period_to: ""
   }));
 
-  if (selectedType === "all") {
+  // ==================================================
+  // LOAD DEFAULTS
+  // ==================================================
 
-    setIsSavedPatti(false);
-    await loadDefaults();  
-    loadTraders();
+  const response = await fetch(
+    `${API}/traderspatti/next-defaults`
+  );
 
+  const data = await response.json();
+
+  if (!response.ok) {
+    return;
   }
 
-  else if (selectedType === "pen") {
+  // ==================================================
+  // DEFAULT DATE = TODAY
+  // ==================================================
+
+  const today = getTodayDate();
+
+  // ==================================================
+  // ALL / PEN KATA
+  // ==================================================
+
+  if (
+    selectedType === "all" ||
+    selectedType === "pen"
+  ) {
 
     setIsSavedPatti(false);
-    await loadDefaults();  
-    loadTraders();
 
+    setFormData(prev => ({
+      ...prev,
+
+      book_no: data.book_no,
+      serial_no: data.serial_no,
+
+      patti_date: today,
+      period_from: today,
+      period_to: today
+    }));
+
+    await loadTraders();
   }
 
- else if (selectedType === "saved") {
+  // ==================================================
+  // RETRIEVE SAVED PATTI
+  // ==================================================
+
+  else if (
+    selectedType === "saved"
+  ) {
 
     setIsSavedPatti(true);
 
     setFormData(prev => ({
-        ...prev,
-        trader_name: "",
-        address: "",
-        book_no: "",
-        serial_no: ""
+      ...prev,
+
+      // IMPORTANT:
+      // Do NOT show new Book / Serial numbers
+      book_no: "",
+      serial_no: "",
+
+      patti_date: today,
+      period_from: today,
+      period_to: today
     }));
 
-    setItems([]);
-
-    loadSavedTraders(formData.patti_date);
-
-}
-
-  else {
-
-    setTraders([]);
-
+    await loadSavedTraders(today);
   }
 
 };
@@ -586,77 +1048,153 @@ const loadSavedPatti = async (traderName, selectedDate) => {
 
 //================ DATE CHANGE =================
 
+// ================= DATE CHANGE =================
+
 const handleDateChange = async (e) => {
 
-  const selectedDate = e.target.value;
+  const selectedDate =
+    e.target.value;
 
-  setFormData(prev => ({
-
-    ...prev,
-
-    patti_date: selectedDate,
-    period_from: selectedDate,
-    period_to: selectedDate
-
-  }));
-
-
-  // If Retrieve Saved Patti is selected,
-  // reload only traders saved on this date
+  // ==================================================
+  // RETRIEVE SAVED PATTI
+  // ==================================================
 
   if (isSavedPatti) {
-
-    await loadSavedTraders(selectedDate);
-
-    // Clear currently selected trader
 
     setFormData(prev => ({
 
       ...prev,
 
+      patti_date:
+        selectedDate,
+
+      period_from:
+        selectedDate,
+
+      period_to:
+        selectedDate,
+
       trader_name: "",
+
       address: "",
+
       licence_no: "",
+
       serial_no: "",
+
       book_no: ""
 
     }));
 
     setItems([]);
 
-    return;
+    setPendingItems([]);
 
+    setCurrentItemIndex(0);
+
+    await loadSavedTraders(
+      selectedDate
+    );
+
+    return;
   }
 
+  // ==================================================
+  // PEN / ALL KATA
+  // ==================================================
 
-  if (!formData.trader_name) return;
+  const today =
+    getTodayDate();
 
-  await loadTraderDetails(
-
-    formData.trader_name,
-    selectedDate
-
-  );
-
-};
-  //================ TRADER CHANGE =================
-
-const handleTraderChange = async (e) => {
-
-  const traderName = e.target.value;
+  // Pending items are always loaded
+  // up to TODAY.
 
   setFormData(prev => ({
 
     ...prev,
 
-    trader_name: traderName,
+    patti_date:
+      today,
+
+    period_from:
+      today,
+
+    period_to:
+      today
+
+  }));
+
+  // No trader selected
+
+  if (!formData.trader_name) {
+    return;
+  }
+
+  // Reload all pending items
+  // up to today.
+
+  await loadTraderDetails(
+    formData.trader_name
+  );
+
+};
+  //================ TRADER CHANGE =================
+
+// ================= TRADER CHANGE =================
+
+const handleTraderChange = async (e) => {
+
+  const traderName =
+    e.target.value;
+
+  // Clear previous trader items
+
+  setPendingItems([]);
+
+  setCurrentItemIndex(0);
+
+  setItems([]);
+
+  if (!traderName) {
+
+    setFormData(prev => ({
+
+      ...prev,
+
+      trader_name: "",
+
+      address: "",
+
+      licence_no: ""
+
+    }));
+
+    return;
+
+  }
+
+  setFormData(prev => ({
+
+    ...prev,
+
+    trader_name:
+      traderName,
+
     address: ""
 
   }));
 
-  if (!traderName) return;
+  // ==================================================
+  // LOAD ADDRESS
+  // ==================================================
 
-  await loadAccountAddress(traderName);
+  await loadAccountAddress(
+    traderName
+  );
+
+  // ==================================================
+  // RETRIEVE SAVED PATTI
+  // ==================================================
 
   if (isSavedPatti) {
 
@@ -665,16 +1203,21 @@ const handleTraderChange = async (e) => {
       formData.patti_date
     );
 
-  }
-
-  else {
-
-    await loadTraderDetails(
-      traderName,
-      formData.patti_date
-    );
+    return;
 
   }
+
+  // ==================================================
+  // PEN / ALL KATA
+  // ==================================================
+
+  // loadTraderDetails itself
+  // uses TODAY and displays
+  // each item's actual entry_date.
+
+  await loadTraderDetails(
+    traderName
+  );
 
 };
   //================ CLEAR =================
@@ -721,132 +1264,316 @@ setIsSavedPatti(false);
 
   //================ SAVE =================
 
- const handleSave = async () => {
+ // ================= SAVE =================
+
+const handleSave = async () => {
 
   if (items.length === 0) {
 
     alert("No items available.");
+
     return;
 
   }
 
   try {
 
-    // Store trader before clearing
-    const savedTrader = formData.trader_name;
+    // ==================================================
+    // STORE CURRENT TRADER
+    // ==================================================
 
-    // Save all items using current Book No / Serial No
-    for (const item of items) {
+    const savedTrader =
+      formData.trader_name;
 
-      const payload = {
+    // ==================================================
+    // CURRENT PENDING ITEM
+    // ==================================================
 
-        entry_no: item.entry_no,
+    const currentItem =
+      items[0];
 
-        book_no: String(formData.book_no),
-        serial_no: String(formData.serial_no),
-        patti_date: formData.patti_date,
+    // ==================================================
+    // IMPORTANT:
+    // USE CURRENT ITEM'S DATE
+    // ==================================================
 
-        trader_name: formData.trader_name,
-        address: formData.address,
-        licence_no: formData.licence_no,
+    const itemDate =
+      currentItem.entry_date ||
+      formData.patti_date;
 
-        item_name: item.item_name,
+    // ==================================================
+    // SAVE CURRENT ITEM
+    // ==================================================
 
-        bags: item.bags,
-        boras: item.boras,
-        net_weight: item.net_weight,
+    const payload = {
 
-        rate_per_qtl: item.rate_per_qtl,
-        actual_price: item.actual_price,
+      entry_no:
+        currentItem.entry_no,
 
-        gross_amount: item.gross_amount,
-        cost_of_bags: item.cost_of_bags,
-        market_fee: item.market_fee,
-        net_value: item.net_value,
+      book_no:
+        String(
+          formData.book_no
+        ),
 
-        period_from: formData.patti_date,
-        period_to: formData.patti_date
+      serial_no:
+        String(
+          formData.serial_no
+        ),
 
-      };
+      // ================================================
+      // IMPORTANT:
+      // SAVE ITEM'S ACTUAL ENTRY DATE
+      // ================================================
 
-      const response = await fetch(
+      patti_date:
+        itemDate,
+
+      trader_name:
+        formData.trader_name,
+
+      address:
+        formData.address,
+
+      licence_no:
+        formData.licence_no,
+
+      item_name:
+        currentItem.item_name,
+
+      bags:
+        currentItem.bags,
+
+      boras:
+        currentItem.boras,
+
+      net_weight:
+        currentItem.net_weight,
+
+      rate_per_qtl:
+        currentItem.rate_per_qtl,
+
+      actual_price:
+        currentItem.actual_price,
+
+      gross_amount:
+        currentItem.gross_amount,
+
+      cost_of_bags:
+        currentItem.cost_of_bags,
+
+      market_fee:
+        currentItem.market_fee,
+
+      net_value:
+        currentItem.net_value,
+
+      // ================================================
+      // PERIOD ALSO USES ITEM DATE
+      // ================================================
+
+      period_from:
+        itemDate,
+
+      period_to:
+        itemDate
+
+    };
+
+    const response =
+      await fetch(
+
         `${API}/traderspatti/`,
+
         {
+
           method: "POST",
+
           headers: {
-            "Content-Type": "application/json"
+
+            "Content-Type":
+              "application/json"
+
           },
-          body: JSON.stringify(payload)
+
+          body:
+            JSON.stringify(
+              payload
+            )
+
         }
+
       );
 
-      if (!response.ok) {
+    if (!response.ok) {
 
-        const err = await response.text();
+      const err =
+        await response.text();
 
-        console.log(err);
+      console.log(err);
 
-        alert(err);
+      alert(err);
 
-        return;
-
-      }
+      return;
 
     }
 
-    alert("Saved Successfully");
-
-    // Remove saved trader from pending list
-    const remainingItems = pendingItems.filter(
-      (_, index) => index !== currentItemIndex
+    alert(
+      "Traders Patti Saved Successfully"
     );
 
-    setPendingItems(remainingItems);
+    // ==================================================
+    // REMOVE CURRENT ITEM
+    // ==================================================
 
-    if (remainingItems.length > 0) {
+    const remainingItems =
+      pendingItems.filter(
 
-      // ******** IMPORTANT ********
-      // Load next Book No and Serial No
-      await loadDefaults();
+        (_, index) =>
+          index !==
+          currentItemIndex
 
-      const nextIndex =
-        currentItemIndex >= remainingItems.length
-          ? remainingItems.length - 1
-          : currentItemIndex;
+      );
 
-      setCurrentItemIndex(nextIndex);
+    setPendingItems(
+      remainingItems
+    );
 
-      setItems([remainingItems[nextIndex]]);
+    // ==================================================
+    // NEXT BOOK / SERIAL
+    // ==================================================
 
-    } else {
+    const nextSerial =
+      Number(
+        formData.serial_no
+      ) + 1;
 
-      // Remove trader from dropdown
+    const nextBook =
+      Number(
+        formData.book_no
+      ) + 1;
+
+    // ==================================================
+    // MORE PENDING ITEMS
+    // ==================================================
+
+    if (
+      remainingItems.length > 0
+    ) {
+
+      const nextItem =
+        remainingItems[0];
+
+      setCurrentItemIndex(0);
+
+      setItems([
+        nextItem
+      ]);
+
+      // Get next Book / Serial
+      // but KEEP next item's date.
+
+      await loadDefaults(true);
+
+      setFormData(prev => ({
+
+        ...prev,
+
+        book_no:
+          String(nextBook),
+
+        serial_no:
+          String(nextSerial),
+
+        // ==============================================
+        // IMPORTANT:
+        // NEXT ITEM'S OWN DATE
+        // ==============================================
+
+        patti_date:
+          nextItem.entry_date ||
+          prev.patti_date,
+
+        period_from:
+          nextItem.entry_date ||
+          prev.period_from,
+
+        period_to:
+          nextItem.entry_date ||
+          prev.period_to,
+
+        gross_amount:
+          Number(
+            nextItem.gross_amount ||
+            0
+          ),
+
+        cost_per_bag:
+          Number(
+            nextItem.cost_of_bags ||
+            0
+          ),
+
+        market_fee:
+          Number(
+            nextItem.market_fee ||
+            0
+          ),
+
+        net_value:
+          Number(
+            nextItem.net_value ||
+            0
+          )
+
+      }));
+
+    }
+
+    // ==================================================
+    // NO MORE PENDING ITEMS
+    // ==================================================
+
+    else {
+
       setTraders(prev =>
-        prev.filter(name => name !== savedTrader)
+        prev.filter(
+          name =>
+            name !==
+            savedTrader
+        )
       );
 
       setItems([]);
+
+      setPendingItems([]);
+
+      setCurrentItemIndex(0);
+
+      // Load next defaults.
+      // New farmer/trader starts with
+      // today's date.
+
+      await loadDefaults(false);
 
       setFormData(prev => ({
 
         ...prev,
 
         trader_name: "",
+
         address: "",
+
         licence_no: "",
 
         gross_amount: 0,
-        cost_of_bags: 0,
-        market_fee: 0,
-        net_value: 0,
 
-        period_from: "",
-        period_to: ""
+        cost_per_bag: 0,
+
+        market_fee: 0,
+
+        net_value: 0
 
       }));
-
-      // Load next Book No / Serial No
-      await loadDefaults();
 
     }
 
@@ -856,7 +1583,9 @@ setIsSavedPatti(false);
 
     console.log(error);
 
-    alert("Error saving Traders Patti");
+    alert(
+      "Error saving Traders Patti"
+    );
 
   }
 
@@ -1433,7 +2162,7 @@ setIsSavedPatti(false);
         onClick={handlePrevious}
         disabled={currentItemIndex === 0}
       >
-        ◀ Previous Patti
+        ◀ Previous 
       </button>
 
       <span className="item-count">
@@ -1448,7 +2177,7 @@ setIsSavedPatti(false);
         onClick={handleNext}
         disabled={currentItemIndex >= pendingItems.length - 1}
       >
-        Next Patti ▶
+        Next  ▶
       </button>
 
     </>
@@ -1465,9 +2194,12 @@ setIsSavedPatti(false);
 
   {/* ================= Print ================= */}
 
- <div className="print-dropdown">
+ {/* ================= PRINT ================= */}
+
+<div className="print-dropdown">
 
   <button
+    type="button"
     className="print-btn"
     onClick={() =>
       setShowPrintMenu(!showPrintMenu)
@@ -1476,30 +2208,105 @@ setIsSavedPatti(false);
     Print ▼
   </button>
 
+
   {showPrintMenu && (
 
     <div className="print-menu">
 
+      {/* ================= CURRENT PATTI ================= */}
+
+      <div className="print-section-title">
+        Current Patti
+      </div>
+
+
       <button
-        onClick={() => handlePrint("english")}
+        type="button"
+        onClick={() =>
+          handlePrint("english", "single")
+        }
       >
         English
       </button>
 
+
       <button
-        onClick={() => handlePrint("telugu")}
+        type="button"
+        onClick={() =>
+          handlePrint("telugu", "single")
+        }
       >
         తెలుగు
       </button>
 
+
       <button
-        onClick={() => handlePrint("hindi")}
+        type="button"
+        onClick={() =>
+          handlePrint("hindi", "single")
+        }
       >
         हिन्दी
       </button>
 
+
       <button
-        onClick={() => handlePrint("tamil")}
+        type="button"
+        onClick={() =>
+          handlePrint("tamil", "single")
+        }
+      >
+        தமிழ்
+      </button>
+
+
+      {/* ================= SEPARATOR ================= */}
+
+      <hr />
+
+
+      {/* ================= ALL PATTIS ================= */}
+
+      <div className="print-section-title">
+        All Pattis
+      </div>
+
+
+      <button
+        type="button"
+        onClick={() =>
+          handlePrint("english", "all")
+        }
+      >
+        English
+      </button>
+
+
+      <button
+        type="button"
+        onClick={() =>
+          handlePrint("telugu", "all")
+        }
+      >
+        తెలుగు
+      </button>
+
+
+      <button
+        type="button"
+        onClick={() =>
+          handlePrint("hindi", "all")
+        }
+      >
+        हिन्दी
+      </button>
+
+
+      <button
+        type="button"
+        onClick={() =>
+          handlePrint("tamil", "all")
+        }
       >
         தமிழ்
       </button>
@@ -1507,19 +2314,15 @@ setIsSavedPatti(false);
     </div>
 
   )}
-  <div
-  style={{
-    position: "absolute",
-    left: "-10000px",
-    top: 0,
-  }}
->
 
+
+  {/* ================= HIDDEN PRINT COMPONENT ================= */}
+
+ <div style={{ display: "none" }}>
   <TradersPattiPrint
     ref={printRef}
     printData={printData}
   />
-
 </div>
 
 </div>

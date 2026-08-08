@@ -249,44 +249,37 @@ def get_farmers(db: Session):
 
 # ================= GET TRADER DETAILS =================
 
+# ================= GET TRADER DETAILS =================
+
 def get_trader_details(
     db: Session,
     trader_name: str,
-    entry_date
+    entry_date: date
 ):
 
     # Entry numbers already saved in TradersPatti
     saved_entries = (
-
-        db.query(
-            TradersPatti.entry_no
-        )
-
+        db.query(TradersPatti.entry_no)
         .subquery()
-
     )
 
-    # Get only unsaved KataList1 entries
+    # Load pending items up to and including selected date
     records = (
-
         db.query(KataList1)
-
         .filter(
-
             KataList1.trader_patti == trader_name,
 
-            KataList1.entry_date == entry_date,
+            # Same as Farmer Patti
+            KataList1.entry_date <= entry_date,
 
+            # Exclude already saved entries
             ~KataList1.entry_no.in_(saved_entries)
-
         )
-
         .order_by(
-            KataList1.id
+            KataList1.entry_date.asc(),
+            KataList1.id.asc()
         )
-
         .all()
-
     )
 
     BAG_RATE = 40
@@ -296,27 +289,19 @@ def get_trader_details(
     for row in records:
 
         gross_amount = (
-
             float(row.net_weight or 0) / 100
-
         ) * float(row.trader_price or 0)
 
         cost_of_bags = (
-
             float(row.bags or 0) * BAG_RATE
-
         )
 
         market_fee = 0
 
         net_value = (
-
-            gross_amount +
-
-            cost_of_bags -
-
-            market_fee
-
+            gross_amount
+            + cost_of_bags
+            - market_fee
         )
 
         result.append({
@@ -349,47 +334,37 @@ def get_trader_details(
 
             "net_value": net_value,
 
-            "bond_no": row.bond_no,
+            "bond_no": row.bond_no
 
         })
 
     return result
-
 # ================= GET FARMER DETAILS =================
 def get_farmer_details(
     db: Session,
     farmer_name: str,
-    entry_date
+    entry_date: date
 ):
 
+    # Already saved entry numbers
     saved_entries = (
-
-        db.query(
-            FarmersPatti.entry_no
-        )
-
+        db.query(FarmersPatti.entry_no)
         .subquery()
-
     )
 
+    # Load pending items up to selected date
     records = (
-
         db.query(KataList1)
-
         .filter(
-
             KataList1.farmer_patti == farmer_name,
-
-            KataList1.entry_date == entry_date,
-
+            KataList1.entry_date <= entry_date,
             ~KataList1.entry_no.in_(saved_entries)
-
         )
-
-        .order_by(KataList1.id)
-
+        .order_by(
+            KataList1.entry_date.asc(),
+            KataList1.id.asc()
+        )
         .all()
-
     )
 
     BAG_RATE = 40
@@ -402,25 +377,35 @@ def get_farmer_details(
             float(row.net_weight or 0) / 100
         ) * float(row.farmer_price or 0)
 
-        cost_of_bags = float(row.bags or 0) * BAG_RATE
+        cost_of_bags = (
+            float(row.bags or 0) * BAG_RATE
+        )
 
         net_value = gross_amount + cost_of_bags
 
         result.append({
+
             "id": row.id,
             "entry_no": row.entry_no,
             "entry_date": row.entry_date,
+
             "item_name": row.item_name,
+
             "bags": row.bags,
             "boras": row.boras,
             "net_weight": row.net_weight,
+
             "rate_per_qtl": row.farmer_price,
             "farmer_price": row.farmer_price,
+
             "gross_amount": gross_amount,
             "cost_of_bags": cost_of_bags,
+
             "market_fee": 0,
+
             "net_value": net_value,
-            "bond_no": row.bond_no,
+
+            "bond_no": row.bond_no
         })
 
     return result

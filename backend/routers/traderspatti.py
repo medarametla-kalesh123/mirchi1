@@ -21,7 +21,8 @@ from services.traderspatti_service import (
     update_traders_patti,
     delete_traders_patti,
     get_saved_patti,
-    get_traders_patti_print 
+    get_traders_patti_print_all ,
+    get_traders_patti_print_single
 )
 
 router = APIRouter(
@@ -119,24 +120,42 @@ def saved_traders(
     )
     
     
-    # ================= PRINT TRADERS PATTI =================
+   
+# =====================================================
+# PRINT CURRENT / SINGLE PATTI
+# =====================================================
 
-@router.get("/print")
-def print_traders_patti(
-
+@router.get("/print-single")
+def print_traders_patti_single(
     trader_name: str,
-    patti_date: date = Query(...),
-
+    patti_date: date,
+    serial_no: str,
+    book_no: str,
     db: Session = Depends(get_db)
-
 ):
+    return get_traders_patti_print_single(
+        db=db,
+        trader_name=trader_name,
+        patti_date=patti_date,
+        serial_no=serial_no,
+        book_no=book_no
+    )
+    
+    
+    # =====================================================
+# PRINT ALL PATTIS
+# =====================================================
 
-    return get_traders_patti_print(
-
-        db,
-        trader_name,
-        patti_date
-
+@router.get("/print-all")
+def print_traders_patti_all(
+    trader_name: str,
+    patti_date: date,
+    db: Session = Depends(get_db)
+):
+    return get_traders_patti_print_all(
+        db=db,
+        trader_name=trader_name,
+        patti_date=patti_date
     )
 
 # ================= GET BY TRADER =================

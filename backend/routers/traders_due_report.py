@@ -5,21 +5,19 @@ from sqlalchemy.orm import Session
 from database import get_db
 
 from schemas.traders_due_report import (
-
     TradersDueReportCreate,
-
     TradersDueReportResponse
-
 )
 
 from services.traders_due_report import (
-
     create_traders_due_entry,
-
     get_all_traders_due_entries
-
 )
 
+
+# =====================================================
+# ROUTER
+# =====================================================
 
 router = APIRouter(
 
@@ -30,14 +28,14 @@ router = APIRouter(
 )
 
 
+# =====================================================
+# CREATE TRADERS DUE ENTRY
+# =====================================================
+
 @router.post(
-
     "/",
-
     response_model=TradersDueReportResponse
-
 )
-
 def create_entry(
 
     entry: TradersDueReportCreate,
@@ -55,14 +53,14 @@ def create_entry(
     )
 
 
+# =====================================================
+# GET ALL TRADERS DUE ENTRIES
+# =====================================================
+
 @router.get(
-
     "/",
-
     response_model=list[TradersDueReportResponse]
-
 )
-
 def get_entries(
 
     db: Session = Depends(get_db)

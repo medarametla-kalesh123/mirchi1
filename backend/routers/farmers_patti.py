@@ -19,6 +19,7 @@ from services.farmers_patti_service import (
     search_farmers_patti,
     get_saved_farmers,
     get_farmers_patti_print,
+    get_single_farmers_patti_print,
     get_saved_patti
 )
 
@@ -229,4 +230,22 @@ def fetch_farmers_patti_print(
 
         patti_date
 
+    )
+    # ================= PRINT ONE PATTI =================
+
+@router.get("/print-single")
+def print_single_farmers_patti(
+    farmer_name: str,
+    patti_date: date,
+    serial_no: str,
+    book_no: str,
+    db: Session = Depends(get_db)
+):
+
+    return get_single_farmers_patti_print(
+        db=db,
+        farmer_name=farmer_name,
+        patti_date=patti_date,
+        serial_no=serial_no,
+        book_no=book_no
     )

@@ -18,6 +18,10 @@ from services.four_column_daybook import (
 )
 
 
+# =====================================================
+# ROUTER
+# =====================================================
+
 router = APIRouter(
 
     prefix="/four-column-daybook",
@@ -32,11 +36,8 @@ router = APIRouter(
 # =====================================================
 
 @router.post(
-
     "/",
-
     response_model=FourColumnDayBookResponse
-
 )
 def create_entry(
 
@@ -60,11 +61,8 @@ def create_entry(
 # =====================================================
 
 @router.get(
-
     "/",
-
     response_model=list[FourColumnDayBookResponse]
-
 )
 def get_entries(
 
@@ -84,9 +82,7 @@ def get_entries(
 # =====================================================
 
 @router.get(
-
     "/new/defaults"
-
 )
 def get_new_entry_defaults(
 
@@ -110,11 +106,8 @@ def get_new_entry_defaults(
 # =====================================================
 
 @router.get(
-
     "/{entry_id}",
-
     response_model=FourColumnDayBookResponse
-
 )
 def get_entry(
 
@@ -152,11 +145,8 @@ def get_entry(
 # =====================================================
 
 @router.put(
-
     "/{entry_id}",
-
     response_model=FourColumnDayBookResponse
-
 )
 def update_entry(
 
@@ -198,9 +188,7 @@ def update_entry(
 # =====================================================
 
 @router.delete(
-
     "/{entry_id}"
-
 )
 def delete_entry(
 
@@ -233,7 +221,6 @@ def delete_entry(
     return {
 
         "message":
-
         "Day book entry deleted successfully"
 
     }
